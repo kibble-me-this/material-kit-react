@@ -5,6 +5,7 @@ import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@m
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../../components/iconify';
+import { magic } from "../../../magic";
 
 // ----------------------------------------------------------------------
 
