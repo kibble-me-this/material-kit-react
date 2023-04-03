@@ -75,6 +75,8 @@
         "object": true,
         "array": false
       }
-    ]
+    ],
+    "camelcase": "off" // Add this line to disable camelcase restriction
   }
 }
+

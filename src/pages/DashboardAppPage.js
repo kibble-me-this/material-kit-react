@@ -84,13 +84,13 @@ export default function DashboardAppPage() {
    /**
    * ppp_tokens_for_owner
    */
-   async function getPPPTokensForOwner(accountId) {
+   async function getPPPTokensForOwner(account_id) {
         
-    const provider = new nearAPI.providers.JsonRpcProvider(                    // Grabbing the account nonce
+    const provider = new nearAPI.providers.JsonRpcProvider(
        `https://rpc.${networkId}.near.org`
     );
 
-    const jsonstring = JSON.stringify({accountId});
+    const jsonstring = JSON.stringify({account_id});
     const encodedData = window.btoa(jsonstring);
 
     const rawResult = await provider.query({
@@ -110,10 +110,6 @@ export default function DashboardAppPage() {
     setPetCount(res.length);
  }  
 
-
-  /**
-   * Perform logout action via Magic.
-   */
   const logout = useCallback(() => {
     magic.user.logout().then(() => {
       navigate('/login', { replace: true });

@@ -9,14 +9,14 @@ ProductList.propTypes = {
   products: PropTypes.array.isRequired,
 };
 
-export default function ProductList({ products, ...other }) {
+export default function ProductList({ products, pets, ...other }) {
   return (
     <Grid container spacing={3} {...other}>
-      {products.map((product) => (
-        <Grid key={product.id} item xs={12} sm={6} md={3}>
-          <ShopProductCard product={product} />
+      {pets.map((pet) => (
+        <Grid key={pet.pet_passport_id} item xs={12} sm={6} md={4}>
+          <ShopProductCard product={pet} />
         </Grid>
       ))}
-    </Grid>
+    </Grid>    
   );
 }

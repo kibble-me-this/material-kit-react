@@ -25,15 +25,24 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  // const { name, cover, price, colors, status, priceSale } = product;
+  const { pet_passport_id, owner_id, metadata: { title, _description, media } } = product;
+  
+  const description = {
+    "species": "dog",
+    "breed": "Miniature American Shepherd",
+    "life-stage": "adult"
+  };
+
+
 
   return (
     <Card>
       <Box sx={{ pt: '100%', position: 'relative' }}>
-        {status && (
+        {title && (
           <Label
             variant="filled"
-            color={(status === 'sale' && 'error') || 'info'}
+            color={(title === 'sale' && 'error') || 'info'}
             sx={{
               zIndex: 9,
               top: 16,
@@ -42,34 +51,23 @@ export default function ShopProductCard({ product }) {
               textTransform: 'uppercase',
             }}
           >
-            {status}
+            {description.species}
           </Label>
         )}
-        <StyledProductImg alt={name} src={cover} />
+        <StyledProductImg alt={title} src={media} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
         <Link color="inherit" underline="hover">
           <Typography variant="subtitle2" noWrap>
-            {name}
+            {title}
           </Typography>
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
+          <ColorPreview colors={["blue"]} />
           <Typography variant="subtitle1">
-            <Typography
-              component="span"
-              variant="body1"
-              sx={{
-                color: 'text.disabled',
-                textDecoration: 'line-through',
-              }}
-            >
-              {priceSale && fCurrency(priceSale)}
-            </Typography>
-            &nbsp;
-            {fCurrency(price)}
+            {fCurrency("1")}
           </Typography>
         </Stack>
       </Stack>
