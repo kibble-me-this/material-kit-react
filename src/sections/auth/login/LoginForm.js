@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@mui/material';
@@ -13,42 +13,47 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const handleClick = () => {
     navigate('/dashboard', { replace: true });
   };
 
+  const loginWithEmail = useCallback(async () => {
+    setIsLoggingIn(true);
+
+    try {
+      await magic.auth.loginWithMagicLink({ email });
+      navigate('/dashboard', { replace: true });
+    } catch (err) {
+      console.log(err);
+      setIsLoggingIn(false);
+    }
+  }, [email]);  
+
+  const handleEmailInputOnChange = useCallback((event) => {
+    setEmail(event.target.value);
+  }, []);
+
   return (
     <>
       <Stack spacing={3}>
-        <TextField name="email" label="Email address" />
-
         <TextField
-          name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
+          id="email"
+          label="Email"
+          type="email"
+          required
+          placeholder="Enter your email"
+          onChange={handleEmailInputOnChange}
+          disabled={isLoggingIn}
         />
-      </Stack>
-
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <Checkbox name="remember" label="Remember me" />
-        <Link variant="subtitle2" underline="hover">
-          Forgot password?
-        </Link>
-      </Stack>
-
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
+      
+      <LoadingButton fullWidth size="large" onClick={loginWithEmail} loading={isLoggingIn} disabled={isLoggingIn} variant="contained">
         Login
-      </LoadingButton>
+      </LoadingButton></Stack>
+
     </>
   );
 }
