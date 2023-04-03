@@ -7,7 +7,7 @@ import { Container } from '@mui/material';
 // import { useSettingsContext } from '../../components/settings';
 // import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-// import UserNewEditForm from '../sections/@dashboard/user/UserNewEditForm';
+import UserNewEditForm from '../sections/@dashboard/user/UserNewEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,8 @@ export default function UserCreatePage() {
       </Helmet>
 
       <Container>
-hello      </Container>
+        <UserNewEditForm />
+      </Container>
     </>
   );
 }
