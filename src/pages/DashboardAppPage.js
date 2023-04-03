@@ -1,9 +1,16 @@
+import React, { useEffect, useState, useCallback } from "react";
+import { useNavigate } from 'react-router-dom';
+
+import * as nearAPI from "near-api-js";
+
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
+import { magic } from "../magic";
+import Loading from "./Loading";
 import Iconify from '../components/iconify';
 // sections
 import {
@@ -18,18 +25,120 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
+ let near;
+
+
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const [txHash, setTxHash] = useState("");
+  const [balance, setBalance] = useState(0);
+  const [sendAmount, setSendAmount] = useState(0);
+  const [userMetadata, setUserMetadata] = useState();
+  const [petCount, setPetCount] = useState(null);
+  const [userPets, setUserPets] = useState([]);
+  const [destinationAddress, setDestinationAddress] = useState("");
+  const [sendingTransaction, setSendingTransaction] = useState(false);
+  const navigate = useNavigate();
+  const networkId = "testnet"; // testnet, betanet, or mainnet
 
-  return (
+  useEffect(() => {
+    // Create NEAR instance
+    (async () => {
+      const { connect, keyStores } = nearAPI;
+
+      const config = {
+        networkId,
+        keyStore: new keyStores.BrowserLocalStorageKeyStore(),
+        nodeUrl: `https://rpc.${networkId}.near.org`,
+        walletUrl: `https://wallet.${networkId}.near.org`,
+        helperUrl: `https://helper.${networkId}.near.org`,
+        explorerUrl: `https://explorer.${networkId}.near.org`,
+      };
+    
+      // connect to NEAR
+      near = await connect(config);
+    })();
+
+    // If user is logged in, retrieve the authenticated user's profile.
+    magic.user.isLoggedIn().then(magicIsLoggedIn => {
+      if (magicIsLoggedIn) {
+        magic.user.getMetadata().then(user => {
+          setUserMetadata(user);
+          fetchBalance(user.publicAddress);
+          getPPPTokensForOwner(user.publicAddress);
+        });
+      } else {
+        // If no user is logged in, redirect to `/login`
+        navigate('/login', { replace: true });
+      }
+    });
+  }, []);  
+
+  const fetchBalance = async (address) => {
+    const account = await near.account(address);
+    account.getAccountBalance().then(bal => setBalance(nearAPI.utils.format.formatNearAmount(bal.total))); 
+  } 
+
+   /**
+   * ppp_tokens_for_owner
+   */
+   async function getPPPTokensForOwner(accountId) {
+        
+    const provider = new nearAPI.providers.JsonRpcProvider(                    // Grabbing the account nonce
+       `https://rpc.${networkId}.near.org`
+    );
+
+    const jsonstring = JSON.stringify({accountId});
+    const encodedData = window.btoa(jsonstring);
+
+    const rawResult = await provider.query({
+       request_type: "call_function",
+       account_id: "ilovepets-m2.testnet",
+       method_name: "ppp_tokens_for_owner",
+       args_base64: encodedData,
+       finality: "optimistic",
+    });
+
+    const encodedResult = new Uint8Array(rawResult.result);
+    const decoder = new TextDecoder();
+    const decodedResult = decoder.decode(encodedResult);
+    const res = JSON.parse(decodedResult);
+  
+    setUserPets(res);
+    setPetCount(res.length);
+ }  
+
+
+  /**
+   * Perform logout action via Magic.
+   */
+  const logout = useCallback(() => {
+    magic.user.logout().then(() => {
+      navigate('/login', { replace: true });
+    })
+  }, [navigate]);  
+
+  return userMetadata ? 
     <>
+
+      <div className="container">
+        <h1>Current user: {userMetadata.email || userMetadata.phoneNumber}</h1>
+        <button onClick={logout}>Logout</button>
+      </div>  
+      <div className="container">
+          <h1>Near account id</h1>
+          <div className="info">{userMetadata.publicAddress}</div>
+      </div>
+
       <Helmet>
         <title> Dashboard | Minimal UI </title>
       </Helmet>
 
       <Container maxWidth="xl">
+      <input type="text" value={JSON.stringify(userPets)} readOnly style={{ width: '100%', marginTop: '10px', padding: '10px' }} />
+
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
@@ -214,6 +323,6 @@ export default function DashboardAppPage() {
           </Grid>
         </Grid>
       </Container>
-    </>
-  );
+    </>: <Loading />
+
 }
