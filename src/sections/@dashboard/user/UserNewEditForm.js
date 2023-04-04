@@ -329,38 +329,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
               />
             )}
-
-            <RHFSwitch
-              name="isVerified"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Email Verified
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Disabling this will automatically send the user a verification email
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-            />
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} md={8}>
-          <Card sx={{ p: 3 }}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
+            <Stack  direction="column" spacing={2} alignItems="flex-end" sx={{ mt: 3 }}>
               <RHFTextField name="petName" label="Pet Name" />
-
               <RHFSelect name="petType" label="Pet Type" defaultValue="" rules={{ required: 'Pet type is required' }}>
                 <option value="" disabled>
                   Select a pet type
@@ -368,9 +338,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 <option value="dog">Dog</option>
                 <option value="cat">Cat</option>
               </RHFSelect>
-
               <RHFTextField name="selectedBreed" label="Breed / selectedBreed" />
               <ButtonGroup
+                fullWidth
+                size="large"
                 name="life_stage"
                 control={control}
                 defaultValue={null}
@@ -385,10 +356,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 <Button>Adult</Button>
                 <Button>Senior</Button>
               </ButtonGroup>
-            </Box>
-
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+             
+              <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Pet' : 'Save Changes'}
               </LoadingButton>
             </Stack>
