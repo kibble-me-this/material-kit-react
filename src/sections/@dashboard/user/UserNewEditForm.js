@@ -186,6 +186,54 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
   const handleCreatePassport = async (data) => {
     console.log("hello");
+    setSendingTransaction(true);
+    setTxHash(false); 
+    const publicKeyString = await magic.near.getPublicKey();
+    const publicKey = nearAPI.utils.PublicKey.fromString(publicKeyString);
+
+    const provider = new nearAPI.providers.JsonRpcProvider(
+    `https://rpc.${networkId}.near.org`
+    );
+
+    const accessKey = await provider.query(
+    `access_key/${userMetadata.publicAddress}/${publicKey.toString()}`,
+    ""
+    );
+
+    const nonce = accessKey.nonce +1;
+
+    const args = new TextEncoder().encode(JSON.stringify( {
+    pet_passport_id: `${userMetadata.publicAddress}-${petName}`,
+    metadata: {
+      title: petName,
+      description: `{species: ${petType}, breed: ${selectedBreed}, life-stage: ${petLifeStage}}`,
+      media: "",
+    },
+    pet_owner_id: userMetadata.publicAddress,
+    }))    
+
+    const actions = [nearAPI.transactions.functionCall("create_pet_passport",args,300000000000000,new BN("11870000000000000000000"))];
+
+    // Near transactions must be sent with the blockhash of a block mined within the last 24 hours
+    const status = await near.connection.provider.status();
+    const blockHash = status.sync_info.latest_block_hash;
+    const serializedBlockHash = nearAPI.utils.serialize.base_decode(blockHash);  
+
+    const transaction = nearAPI.transactions.createTransaction(
+    userMetadata.publicAddress,                                           // sender address
+    publicKey,                                                            // sender public key
+    contractName,                                                         // destinationAddress, // receiver
+    nonce,                                                                // sender account nonce
+    actions,                                                              // transaction instructions
+    serializedBlockHash                                                   // hash of a block mined within prev 24 hours
+    );
+
+    const rawTransaction = transaction.encode();
+    const result = await magic.near.signTransaction({rawTransaction, networkID: networkId});
+    const signedTransaction = nearAPI.transactions.SignedTransaction.decode(Buffer.from(result.encodedSignedTransaction));
+    const receipt = await near.connection.provider.sendTransaction(signedTransaction);
+    console.log(receipt);
+    setTxHash(receipt.transaction.hash); 
   };
   
   const onSubmit = async () => {
