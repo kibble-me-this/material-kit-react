@@ -53,6 +53,7 @@
     "framer-motion": "^10.10.0",
     "highlight.js": "^11.7.0",
     "history": "^5.3.0",
+    "ipfs-http-client": "^50.1.2",
     "lodash": "^4.17.21",
     "magic-sdk": "^16.0.1",
     "near-api-js": "^2.0.4",
@@ -74,7 +75,7 @@
     "yup": "^1.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
+    "@babel/core": "^7.21.4",
     "@babel/eslint-parser": "^7.19.1",
     "assert": "^2.0.0",
     "buffer": "^6.0.3",

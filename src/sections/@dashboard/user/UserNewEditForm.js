@@ -16,7 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup } from '@mui/material';
 // utils
 import BN from 'bn.js';
-// import { create } from "ipfs-http-client";
+import { create } from "ipfs-http-client";
 import bs58 from 'bs58';
 
 import { fData } from '../../../utils/formatNumber';
@@ -53,17 +53,17 @@ let near;
 const projectId = "2LIY06BYu1sRP7pEVZEg1Pk4yWg";
 const projectSecret = "0a9dca59a54739a793b891629515d83d";
 
-// const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
+const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
 
-// const client = create({
-//   host: "ipfs.infura.io",
-//  port: 5001,
-//   protocol: "https",
-//  apiPath: "/api/v0",
-//   headers: {
-//    authorization: auth
-//  }
-// });
+const client = create({
+   host: "ipfs.infura.io",
+  port: 5001,
+   protocol: "https",
+  apiPath: "/api/v0",
+   headers: {
+    authorization: auth
+  }
+ });
 
 
 export default function UserNewEditForm({ isEdit = false, currentUser }) {
