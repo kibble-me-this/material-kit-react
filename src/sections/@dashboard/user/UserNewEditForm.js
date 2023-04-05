@@ -48,11 +48,8 @@ UserNewEditForm.propTypes = {
 
 let near;
 
-const infuraEndpoint = 'https://ipfs.infura.io';
 const projectId = "2LIY06BYu1sRP7pEVZEg1Pk4yWg";
 const projectSecret = "0a9dca59a54739a793b891629515d83d";
-const infuraAPI = `https://${projectId}:${projectSecret}@ipfs.infura.io:5001/api/v0`;
-// const ipfs = create({ url: infuraAPI });
 
 
 const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
@@ -76,42 +73,14 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const [v1URL, setv1URL] = useState({});
   const [txHash, setTxHash] = useState("");                                  // mint ppp
   const [sendingTransaction, setSendingTransaction] = useState(false);       // mint ppp
-  const [image, setImage] = useState({});
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
-  const petName = "Fluffy";
-  const petType = "Dog";
-  const selectedBreed = "Poodle";
-  const petLifeStage = "Adult";
-  const petGender = "Female";
-  const ownerName = "John Doe";
-  const ownerState = "California";
-  const ownerCity = "San Francisco";
-
-  const sampleFormData = {
-    petName: "Fluffy",
-    petType: "Dog",
-    selectedBreed: "Poodle",
-    petLifeStage: "Adult",
-    petGender: "Female",
-    ownerName: "John Doe",
-    ownerState: "California",
-    ownerCity: "San Francisco",
-    contractName: "my_contract",
-    userMetadata: { publicAddress: "1234" },
-    networkId: "testnet",
-    image: { path: "Qm1234", cid: { toV1: () => "bafybeifkzwf" } }
-  };
 
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
     petType: Yup.string().required('Pet type is required'),
     selectedBreed: Yup.string().required('Breed / selectedBreed is required'),
     avatarUrl: Yup.mixed().required('Avatar is required'),
-    isPuppy: Yup.boolean().required('Life stage is required'),
-    isAdult: Yup.boolean().required('Life stage is required'),
-    isSenior: Yup.boolean().required('Life stage is required'),
   });
 
   const defaultValues = useMemo(
@@ -122,9 +91,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       avatarUrl: currentUser?.avatarUrl || null,
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
-      isPuppy: false,
-      isAdult: false,
-      isSenior: false,
     }),
     [currentUser]
   );
@@ -207,9 +173,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       petType,
       selectedBreed,
       avatarUrl,
-      isPuppy,
-      isAdult,
-      isSenior
+      petLifeStage
     } = data;
     
     setSendingTransaction(true);
@@ -237,10 +201,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     
     const args = new TextEncoder().encode(
       JSON.stringify({
-        pet_passport_id: `${userMetadata.publicAddress}-${data.petName}`,
+        pet_passport_id: `${userMetadata.publicAddress}-${petName}`,
         metadata: {
           title: data.petName,
-          description: `{"species": "${data.petType}", "breed": "${data.selectedBreed}", "life-stage": "${data.petLifeStage}"}`,
+          description: `{"species": "${petType}", "breed": "${selectedBreed}", "life-stage": "${petLifeStage}"}`,
           media: imageUrl,
         },
         pet_owner_id: userMetadata.publicAddress,
@@ -378,7 +342,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               <ButtonGroup
                 fullWidth
                 size="large"
-                name="life_stage"
+                name="lifeStage"
                 control={control}
                 defaultValue={null}
                 options={[
@@ -392,10 +356,13 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 <Button>Adult</Button>
                 <Button>Senior</Button>
               </ButtonGroup>
-             
               <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Pet' : 'Save Changes'}
               </LoadingButton>
+              {txHash && <a href={`https://explorer.testnet.near.org/transactions/${txHash}`} target="_blank" rel="noreferrer">
+                View on Near
+              </a>
+              }
             </Stack>
           </Card>
         </Grid>
