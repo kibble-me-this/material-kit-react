@@ -5,7 +5,6 @@ import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as nearAPI from "near-api-js";
-// import { Buffer } from 'buffer';
 
 
 // form
@@ -29,14 +28,27 @@ import Label from '../../../components/label';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
   RHFSelect,
-  RHFSwitch,
   RHFTextField,
   RHFUploadAvatar,
+  RHFAutocomplete
 } from '../../../components/hook-form';
-// import RHFButtonGroup from '../../../components/hook-form/RHFButtonGroup';
 
 
-
+const TAGS_OPTION = [
+  'Toy Story 3',
+  'Logan',
+  'Full Metal Jacket',
+  'Dangal',
+  'The Sting',
+  '2001: A Space Odyssey',
+  "Singin' in the Rain",
+  'Toy Story',
+  'Bicycle Thieves',
+  'The Kid',
+  'Inglourious Basterds',
+  'Snatch',
+  '3 Idiots',
+];
 
 
 // ----------------------------------------------------------------------
@@ -79,18 +91,18 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
     petType: Yup.string().required('Pet type is required'),
-    selectedBreed: Yup.string().required('Breed / selectedBreed is required'),
     avatarUrl: Yup.mixed().required('Avatar is required'),
+    selectedBreed: Yup.array().min(1, 'Must have at least 1 tags'),
   });
 
   const defaultValues = useMemo(
     () => ({
       petName: currentUser?.name || '',
       petType: currentUser?.petType || null,
-      selectedBreed: currentUser?.selectedBreed || '',
       avatarUrl: currentUser?.avatarUrl || null,
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
+      selectedBreed: currentUser?.tags || [TAGS_OPTION[0]],
     }),
     [currentUser]
   );
@@ -338,7 +350,15 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 <option value="dog">Dog</option>
                 <option value="cat">Cat</option>
               </RHFSelect>
-              <RHFTextField name="selectedBreed" label="Breed / selectedBreed" />
+              <RHFAutocomplete
+                  fullWidth
+                  name="selectedBreed"
+                  label="Breeds"
+                  multiple
+                  freeSolo
+                  options={TAGS_OPTION.map((option) => option)}
+                  ChipProps={{ size: 'small' }}
+                />
               <ButtonGroup
                 fullWidth
                 size="large"
@@ -356,6 +376,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 <Button>Adult</Button>
                 <Button>Senior</Button>
               </ButtonGroup>
+
               <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Pet' : 'Save Changes'}
               </LoadingButton>
