@@ -188,8 +188,9 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
   const handleImageUpload = async (file) => {
     try {
-      const { cid } = await ipfs.add(file);
-      const v1CID = cid.toV1();
+      const fileData = await file.arrayBuffer(); // get the file data from the path property
+      const { cid } = await ipfs.add(fileData);
+      const v1CID = cid.toV1().toBaseEncodedString('base32');
       const v1URL = `https://${v1CID}.ipfs.dweb.link`;
       const url = `https://ipfs.io/ipfs/${cid.toString()}`;
       console.log(`Image uploaded to IPFS with CID: ${cid.toString()}`);
@@ -197,22 +198,24 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     } catch (error) {
       console.log(`Error uploading image to IPFS: ${error}`);
     }
-    return null; // add this line to provide a default return value
-  };
+    return null;
+  }
 
   const handleCreatePassport = async (data) => {
     const {
       petName,
       petType,
       selectedBreed,
-      petLifeStage,
       avatarUrl,
+      isPuppy,
+      isAdult,
+      isSenior
     } = data;
     
     setSendingTransaction(true);
     setTxHash(false); 
 
-    const imageUrl = await handleImageUpload(data.avatarUrl);
+    const imageUrl = await handleImageUpload(avatarUrl);
     if (!imageUrl) {
       console.log('Error uploading image to IPFS');
       return;
