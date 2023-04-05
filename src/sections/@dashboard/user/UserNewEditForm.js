@@ -16,8 +16,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup } from '@mui/material';
 // utils
 import BN from 'bn.js';
-import { create } from "ipfs-http-client";
-import bs58 from 'bs58';
+import { create } from 'ipfs-http-client';
 
 import { fData } from '../../../utils/formatNumber';
 // routes
@@ -49,20 +48,23 @@ UserNewEditForm.propTypes = {
 
 let near;
 
-// move to .env
+const infuraEndpoint = 'https://ipfs.infura.io';
 const projectId = "2LIY06BYu1sRP7pEVZEg1Pk4yWg";
 const projectSecret = "0a9dca59a54739a793b891629515d83d";
+const infuraAPI = `https://${projectId}:${projectSecret}@ipfs.infura.io:5001/api/v0`;
+// const ipfs = create({ url: infuraAPI });
+
 
 const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
 
-const client = create({
+const ipfs = create({
    host: "ipfs.infura.io",
-  port: 5001,
-   protocol: "https",
-  apiPath: "/api/v0",
-   headers: {
-    authorization: auth
-  }
+   port: 5001,
+    protocol: "https",
+   apiPath: "/api/v0",
+    headers: {
+     authorization: auth
+   }
  });
 
 
@@ -184,10 +186,38 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     });
   }, []);    
 
+  const handleImageUpload = async (file) => {
+    try {
+      const { cid } = await ipfs.add(file);
+      const v1CID = cid.toV1();
+      const v1URL = `https://${v1CID}.ipfs.dweb.link`;
+      const url = `https://ipfs.io/ipfs/${cid.toString()}`;
+      console.log(`Image uploaded to IPFS with CID: ${cid.toString()}`);
+      return url;
+    } catch (error) {
+      console.log(`Error uploading image to IPFS: ${error}`);
+    }
+    return null; // add this line to provide a default return value
+  };
+
   const handleCreatePassport = async (data) => {
-    console.log("hello");
+    const {
+      petName,
+      petType,
+      selectedBreed,
+      petLifeStage,
+      avatarUrl,
+    } = data;
+    
     setSendingTransaction(true);
     setTxHash(false); 
+
+    const imageUrl = await handleImageUpload(data.avatarUrl);
+    if (!imageUrl) {
+      console.log('Error uploading image to IPFS');
+      return;
+    }
+
     const publicKeyString = await magic.near.getPublicKey();
     const publicKey = nearAPI.utils.PublicKey.fromString(publicKeyString);
 
@@ -201,16 +231,18 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     );
 
     const nonce = accessKey.nonce +1;
-
-    const args = new TextEncoder().encode(JSON.stringify( {
-    pet_passport_id: `${userMetadata.publicAddress}-${petName}`,
-    metadata: {
-      title: petName,
-      description: `{species: ${petType}, breed: ${selectedBreed}, life-stage: ${petLifeStage}}`,
-      media: "",
-    },
-    pet_owner_id: userMetadata.publicAddress,
-    }))    
+    
+    const args = new TextEncoder().encode(
+      JSON.stringify({
+        pet_passport_id: `${userMetadata.publicAddress}-${data.petName}`,
+        metadata: {
+          title: data.petName,
+          description: `{"species": "${data.petType}", "breed": "${data.selectedBreed}", "life-stage": "${data.petLifeStage}"}`,
+          media: imageUrl,
+        },
+        pet_owner_id: userMetadata.publicAddress,
+      })
+    );    
 
     const actions = [nearAPI.transactions.functionCall("create_pet_passport",args,300000000000000,new BN("11870000000000000000000"))];
 
@@ -236,9 +268,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     setTxHash(receipt.transaction.hash); 
   };
   
-  const onSubmit = async () => {
+  const onSubmit = async (data) => {
     try {
-      await handleCreatePassport(sampleFormData);
+      // setImage(data.avatarUrl.files[0]);
+      await handleCreatePassport(data);
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
       navigate("/dashboard/pets");
     } catch (error) {

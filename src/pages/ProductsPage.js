@@ -8,6 +8,7 @@ import * as nearAPI from "near-api-js";
 import { Container, Stack, Typography, Button, Box } from '@mui/material';
 // components
 import { magic } from "../magic";
+import Loading from "./Loading";
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 import Iconify from '../components/iconify';
 // mock
@@ -19,6 +20,7 @@ let near;
 // ----------------------------------------------------------------------
 
 export default function ProductsPage() {
+  const [userMetadata, setUserMetadata] = useState();
   const [openFilter, setOpenFilter] = useState(false);
   const [petCount, setPetCount] = useState(null);
   const [userPets, setUserPets] = useState([]);
@@ -55,6 +57,7 @@ export default function ProductsPage() {
     magic.user.isLoggedIn().then(magicIsLoggedIn => {
       if (magicIsLoggedIn) {
         magic.user.getMetadata().then(user => {
+          setUserMetadata(user);
           getPPPTokensForOwner(user.publicAddress); 
         });
       } else {
@@ -90,7 +93,7 @@ export default function ProductsPage() {
     setPetCount(res.length);
  }   
 
-  return (
+  return userMetadata ?
     <>
       <Helmet>
         <title> Dashboard: Pets | Petastic </title>
@@ -134,6 +137,5 @@ export default function ProductsPage() {
         <ProductList pets={userPets} />
 
       </Container>
-    </>
-  );
+    </>: <Loading />
 }
