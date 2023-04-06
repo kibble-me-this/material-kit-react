@@ -93,13 +93,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [petType, setPetType] = useState('');
-  const [isAutocompleteEnabled, setIsAutocompleteEnabled] = useState(false);
 
   const handlePetTypeChange = (event, newPetType) => {
-    if (newPetType) {
-      setIsAutocompleteEnabled(true);
-      setPetType(newPetType);
-    }
+    setPetType(newPetType);
+    setValue('petType', newPetType);
   };
   const [puppy_kitten, setPuppyKitten] = useState('BABY');   
   const [petLifeStage, setPetLifeStage] = useState('');
@@ -152,12 +149,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       });
   }
   
-  const error = petType && !selectedBreed;
-  const helperText = !petType
-    ? "Choose Cat or Dog"
-    : !selectedBreed && "Please choose a breed"
-      || loadingBreeds && "Fetching breeds..."
-      || "";
+
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -453,20 +445,11 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                       onChange={handleSearch}
                       value={searchTerm}
                       fullWidth
-                      error={petType && !selectedBreed} // Show error if petType is selected but breed is not
-                      helperText={
-                        !petType
-                          ? "Choose Cat or Dog"
-                          : !selectedBreed && "Please choose a breed"
-                          || error?.message
-                          || loadingBreeds && "Fetching breeds..."
-                          || helperText
-                      }                  />
+                  />
                 )}
-                disabled={!petType} // Disable input until pet type is chosen
-                loading={petType && loadingBreeds}
-                loadingText={petType ? "Fetching breeds..." : "Choose Cat or Dog"} // Set loading text based on selected pet type
-                noOptionsText="Type valid pet breed"
+                loading={loadingBreeds}
+                loadingText="Fetching breeds..."
+                noOptionsText="Type in the breed"
                 multiple
                 />
 
