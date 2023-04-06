@@ -2,7 +2,7 @@
 
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as nearAPI from "near-api-js";
 
@@ -12,7 +12,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup, ToggleButtonGroup, ToggleButton, Autocomplete, TextField, CircularProgress} from '@mui/material';
 // utils
 import BN from 'bn.js';
 import { create } from 'ipfs-http-client';
@@ -81,6 +81,9 @@ const ipfs = create({
 export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const networkId = "testnet"; // testnet, betanet, or mainnet
   const contractName = "ilovepets-m2.testnet";
+  const autocompleteRef = useRef(null);
+  const [loading, setLoading] = useState(false);
+
 
   const [userMetadata, setUserMetadata] = useState();
   const [v1URL, setv1URL] = useState({});
@@ -90,10 +93,13 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [petType, setPetType] = useState('');
+  const [isAutocompleteEnabled, setIsAutocompleteEnabled] = useState(false);
 
   const handlePetTypeChange = (event, newPetType) => {
-    setPetType(newPetType);
-    setValue('petType', newPetType);
+    if (newPetType) {
+      setIsAutocompleteEnabled(true);
+      setPetType(newPetType);
+    }
   };
   const [puppy_kitten, setPuppyKitten] = useState('BABY');   
   const [petLifeStage, setPetLifeStage] = useState('');
@@ -101,12 +107,17 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     setPetLifeStage(newLifeStage);
     setValue('petLifeStage', newLifeStage);
   };
+  const [searchTerm, setSearchTerm] = useState('');
+   const [breeds, setBreeds] = useState([]);
+   const [responseText, setResponseText] = useState('');
+   const [selectedBreed, setSelectedBreed] = useState([]);
+   const [loadingBreeds, setLoadingBreeds] = useState(false);
 
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
     petType: Yup.string().required('Pet type is required'),
     avatarUrl: Yup.mixed().required('Avatar is required'),
-    selectedBreed: Yup.array().min(1, 'Must have at least 1 tags'),
+    // selectedBreed: Yup.array().min(1, 'Must have at least 1 tags'),
   });
 
   const defaultValues = useMemo(
@@ -120,6 +131,33 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     }),
     [currentUser]
   );
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value;
+    setSearchTerm(searchTerm);
+    setLoadingBreeds(true);
+
+    fetch(`https://prd.petastic.com/breeds?search=${searchTerm}&pet_type=${petType}&start=0&limit=10&uxv=v-1.4.0`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        const breedNames = data.data.map(breed => breed.primary_name);
+        setBreeds(breedNames);
+        setResponseText(JSON.stringify(data, null, 2));
+        setLoadingBreeds(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setLoadingBreeds(false);
+      });
+  }
+  
+  const error = petType && !selectedBreed;
+  const helperText = !petType
+    ? "Choose Cat or Dog"
+    : !selectedBreed && "Please choose a breed"
+      || loadingBreeds && "Fetching breeds..."
+      || "";
 
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
@@ -368,8 +406,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 onChange={handlePetTypeChange}
                 control={control}
               >
-                <ToggleButton value="dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
-                <ToggleButton value="cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
+                <ToggleButton value="Dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
+                <ToggleButton value="Cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
               </ToggleButtonGroup>
 
 
@@ -386,14 +424,50 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 <ToggleButton value="adult">ADULT</ToggleButton>
                 <ToggleButton value="senior">SENIOR</ToggleButton>
               </ToggleButtonGroup>
-              <RHFAutocomplete
-                  fullWidth
-                  name="selectedBreed"
-                  label="Breeds"
-                  multiple
-                  freeSolo
-                  options={TAGS_OPTION.map((option) => option)}
-                  ChipProps={{ size: 'small' }}
+              <Autocomplete
+                fullWidth
+                ref={autocompleteRef}
+                options={breeds}
+                value={selectedBreed}
+                onChange={(event, values) => setSelectedBreed(values)}
+                renderInput={(params) => (
+                  <TextField
+                      {...params}
+                      label="Enter Pet Breed"
+                      variant="outlined"
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                            {params.InputProps.endAdornment}
+                          </>
+                        ),
+                        popupIcon: null 
+                      }}
+                      sx={{ "& .MuiAutocomplete-endAdornment": {
+                          display: "none"
+                        }
+                      }}
+
+                      onChange={handleSearch}
+                      value={searchTerm}
+                      fullWidth
+                      error={petType && !selectedBreed} // Show error if petType is selected but breed is not
+                      helperText={
+                        !petType
+                          ? "Choose Cat or Dog"
+                          : !selectedBreed && "Please choose a breed"
+                          || error?.message
+                          || loadingBreeds && "Fetching breeds..."
+                          || helperText
+                      }                  />
+                )}
+                disabled={!petType} // Disable input until pet type is chosen
+                loading={petType && loadingBreeds}
+                loadingText={petType ? "Fetching breeds..." : "Choose Cat or Dog"} // Set loading text based on selected pet type
+                noOptionsText="Type valid pet breed"
+                multiple
                 />
 
               <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
