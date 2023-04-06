@@ -371,8 +371,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 onChange={handlePetTypeChange}
                 control={control}
               >
-                <ToggleButton value="Dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
-                <ToggleButton value="Cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
+                <ToggleButton sx={{ fontWeight: 400 }} value="Dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
+                <ToggleButton sx={{ fontWeight: 400 }} value="Cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
               </ToggleButtonGroup>
 
 
@@ -385,9 +385,9 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 onChange={handleChangeLifeStage}
                 control={control}
               >
-                <ToggleButton value="puppy">{puppy_kitten}</ToggleButton>
-                <ToggleButton value="adult">ADULT</ToggleButton>
-                <ToggleButton value="senior">SENIOR</ToggleButton>
+                <ToggleButton sx={{ fontWeight: 400 }} value="puppy">{puppy_kitten}</ToggleButton>
+                <ToggleButton sx={{ fontWeight: 400 }} value="adult">ADULT</ToggleButton>
+                <ToggleButton sx={{ fontWeight: 400 }} value="senior">SENIOR</ToggleButton>
               </ToggleButtonGroup>
               <Autocomplete
                 fullWidth
@@ -408,7 +408,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                             {params.InputProps.endAdornment}
                           </>
                         ),
-                        popupIcon: null 
                       }}
                       sx={{ "& .MuiAutocomplete-endAdornment": {
                           display: "none"
@@ -418,11 +417,14 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                       onChange={handleSearch}
                       value={searchTerm}
                       fullWidth
+                      disabled={!petType}
+                      helperText={petType ? `Enter multiple breeds for mixed pets` : 'Choose cat or dog first'}
                   />
                 )}
+                disabled={!petType}
                 loading={loadingBreeds}
                 loadingText="Fetching breeds..."
-                noOptionsText={petType ? "Enter breed" : "Choose Cat or Dog"}
+                noOptionsText={petType ? `Enter ${petType} breed` : 'Choose Cat or Dog'}
                 multiple
                 />
 
