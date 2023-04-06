@@ -33,24 +33,6 @@ import FormProvider, {
   RHFAutocomplete
 } from '../../../components/hook-form';
 
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
-];
-
-
 // ----------------------------------------------------------------------
 
 UserNewEditForm.propTypes = {
@@ -62,10 +44,7 @@ let near;
 
 const projectId = "2LIY06BYu1sRP7pEVZEg1Pk4yWg";
 const projectSecret = "0a9dca59a54739a793b891629515d83d";
-
-
 const auth = `Basic ${Buffer.from(`${projectId}:${projectSecret}`).toString("base64")}`;
-
 const ipfs = create({
    host: "ipfs.infura.io",
    port: 5001,
@@ -83,17 +62,13 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const contractName = "ilovepets-m2.testnet";
   const autocompleteRef = useRef(null);
   const [loading, setLoading] = useState(false);
-
-
   const [userMetadata, setUserMetadata] = useState();
   const [v1URL, setv1URL] = useState({});
   const [txHash, setTxHash] = useState("");
   const [sendingTransaction, setSendingTransaction] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
   const [petType, setPetType] = useState('');
-
   const handlePetTypeChange = (event, newPetType) => {
     setPetType(newPetType);
     setValue('petType', newPetType);
@@ -105,10 +80,10 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     setValue('petLifeStage', newLifeStage);
   };
   const [searchTerm, setSearchTerm] = useState('');
-   const [breeds, setBreeds] = useState([]);
-   const [responseText, setResponseText] = useState('');
-   const [selectedBreed, setSelectedBreed] = useState([]);
-   const [loadingBreeds, setLoadingBreeds] = useState(false);
+  const [breeds, setBreeds] = useState([]);
+  const [responseText, setResponseText] = useState('');
+  const [selectedBreed, setSelectedBreed] = useState([]);
+  const [loadingBreeds, setLoadingBreeds] = useState(false);
 
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
@@ -124,7 +99,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       avatarUrl: currentUser?.avatarUrl || null,
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
-      selectedBreed: currentUser?.tags || [TAGS_OPTION[0]],
+      // selectedBreed: currentUser?.tags || [TAGS_OPTION[0]],
     }),
     [currentUser]
   );
@@ -149,8 +124,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       });
   }
   
-
-
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
@@ -449,7 +422,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 )}
                 loading={loadingBreeds}
                 loadingText="Fetching breeds..."
-                noOptionsText="Type in the breed"
+                noOptionsText={petType ? "Enter breed" : "Choose Cat or Dog"}
                 multiple
                 />
 
