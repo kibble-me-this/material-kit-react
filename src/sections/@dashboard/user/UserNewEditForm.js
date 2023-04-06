@@ -12,7 +12,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup, ToggleButtonGroup, ToggleButton } from '@mui/material';
 // utils
 import BN from 'bn.js';
 import { create } from 'ipfs-http-client';
@@ -77,16 +77,30 @@ const ipfs = create({
  });
 
 
+
 export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const networkId = "testnet"; // testnet, betanet, or mainnet
   const contractName = "ilovepets-m2.testnet";
 
   const [userMetadata, setUserMetadata] = useState();
   const [v1URL, setv1URL] = useState({});
-  const [txHash, setTxHash] = useState("");                                  // mint ppp
-  const [sendingTransaction, setSendingTransaction] = useState(false);       // mint ppp
+  const [txHash, setTxHash] = useState("");
+  const [sendingTransaction, setSendingTransaction] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  const [petType, setPetType] = useState('');
+
+  const handlePetTypeChange = (event, newPetType) => {
+    setPetType(newPetType);
+    setValue('petType', newPetType);
+  };
+  const [puppy_kitten, setPuppyKitten] = useState('BABY');   
+  const [petLifeStage, setPetLifeStage] = useState('');
+  const handleChangeLifeStage = (event, newLifeStage) => {
+    setPetLifeStage(newLifeStage);
+    setValue('petLifeStage', newLifeStage);
+  };
 
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
@@ -343,13 +357,35 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
             )}
             <Stack  direction="column" spacing={2} alignItems="flex-end" sx={{ mt: 3 }}>
               <RHFTextField name="petName" label="Pet Name" />
-              <RHFSelect name="petType" label="Pet Type" defaultValue="" rules={{ required: 'Pet type is required' }}>
-                <option value="" disabled>
-                  Select a pet type
-                </option>
-                <option value="dog">Dog</option>
-                <option value="cat">Cat</option>
-              </RHFSelect>
+
+
+              <ToggleButtonGroup
+                fullWidth
+                name="petType"
+                color="primary"
+                exclusive
+                value={petType}
+                onChange={handlePetTypeChange}
+                control={control}
+              >
+                <ToggleButton value="dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
+                <ToggleButton value="cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
+              </ToggleButtonGroup>
+
+
+              <ToggleButtonGroup
+                fullWidth
+                name="petLifeStage"
+                color="primary"
+                exclusive
+                value={petLifeStage}
+                onChange={handleChangeLifeStage}
+                control={control}
+              >
+                <ToggleButton value="puppy">{puppy_kitten}</ToggleButton>
+                <ToggleButton value="adult">ADULT</ToggleButton>
+                <ToggleButton value="senior">SENIOR</ToggleButton>
+              </ToggleButtonGroup>
               <RHFAutocomplete
                   fullWidth
                   name="selectedBreed"
@@ -359,23 +395,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                   options={TAGS_OPTION.map((option) => option)}
                   ChipProps={{ size: 'small' }}
                 />
-              <ButtonGroup
-                fullWidth
-                size="large"
-                name="lifeStage"
-                control={control}
-                defaultValue={null}
-                options={[
-                  { value: 'puppy', label: 'Puppy' },
-                  { value: 'adult', label: 'Adult' },
-                  { value: 'senior', label: 'Senior' },
-                ]}
-                rules={{ required: 'Life stage is required' }}
-              >
-                <Button>Puppy</Button>
-                <Button>Adult</Button>
-                <Button>Senior</Button>
-              </ButtonGroup>
 
               <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Pet' : 'Save Changes'}
