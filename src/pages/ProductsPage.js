@@ -122,20 +122,7 @@ export default function ProductsPage() {
             <ProductSort />
           </Stack>
         </Stack>
-        <input
-          type="text"
-          value={JSON.stringify(userPets)}
-          onChange={(e) => setUserPets(JSON.parse(e.target.value))}
-          readOnly={false}
-          style={{
-            width: '100%',
-            marginTop: '10px',
-            padding: '10px',
-            overflow: 'scroll'
-          }}
-        />
         <ProductList pets={userPets} />
-
       </Container>
     </>: <Loading />
 }

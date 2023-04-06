@@ -133,8 +133,6 @@ export default function DashboardAppPage() {
       </Helmet>
 
       <Container maxWidth="xl">
-      <input type="text" value={JSON.stringify(userPets)} readOnly style={{ width: '100%', marginTop: '10px', padding: '10px' }} />
-
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
