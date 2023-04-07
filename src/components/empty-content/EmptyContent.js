@@ -1,7 +1,11 @@
+import { useNavigate, Link } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 // @mui
-import { Typography, Stack, Card } from '@mui/material';
+
+import { Typography, Stack, Card, Button } from '@mui/material';
 //
+import Iconify from '../iconify';
 import Image from '../image';
 import EmptyImage from '../../assets/illustrations/BookingIllustration';
 
@@ -15,6 +19,8 @@ EmptyContent.propTypes = {
 };
 
 export default function EmptyContent({ title, description, img, sx, ...other }) {
+  const navigate = useNavigate();
+
   return (
     <Card sx={{ mb: 3 }}>
 
@@ -41,9 +47,14 @@ export default function EmptyContent({ title, description, img, sx, ...other }) 
       </Typography>
 
       {description && (
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {description}
-        </Typography>
+        <><Typography variant="body2" sx={{acolor: 'text.secondary' }}>
+            {description}
+          </Typography>
+          <Link to="/dashboard/blank">
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Pet
+            </Button>
+          </Link></>
       )}
     </Stack>
     </Card>

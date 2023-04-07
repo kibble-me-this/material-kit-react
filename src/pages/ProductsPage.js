@@ -104,16 +104,20 @@ export default function ProductsPage() {
       </Helmet>
 
       <Container>
+     
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
           My Pets
           </Typography>
-          <Link to="/dashboard/blank">
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Pet
-          </Button>
-        </Link>
+           {!isEmptyCart &&
+           <Link to="/dashboard/blank">
+            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Pet
+            </Button>
+          </Link>
+          }
         </Stack>
+      
         <Box borderBottom="1px solid #CED4DA" width="100%" mt={1} />
 
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
@@ -126,6 +130,7 @@ export default function ProductsPage() {
             <ProductSort />
           </Stack>
         </Stack>
+        
         {!isEmptyCart ? (
           <ProductList pets={userPets} />
         ) : (

@@ -48,16 +48,19 @@ const navConfig = [
     title: 'Rewards',
     path: '/dashboard/rewards',
     icon: icon('ic_cart'),
+    disabled: true,
   },
   {
     title: 'Membership',
     path: '/dashboard/membership',
     icon: icon('ic_blog'),
+    disabled: true,
   },
   {
     title: 'Integrations',
     path: '/dashboard/integrations',
     icon: icon('ic_lock'),
+    disabled: true,
   },
 ];
 
