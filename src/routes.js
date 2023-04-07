@@ -8,7 +8,7 @@ import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
-import DashboardAppPage from './pages/DashboardAppPage';
+import GeneralBankingPage from './pages/dashboard/GeneralBankingPage';
 import BlankPage from './pages/BlankPage';
 
 
@@ -21,7 +21,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
+        { path: 'app', element: <GeneralBankingPage /> },
         { path: 'pets', element: <ProductsPage /> },
         { path: 'rewards', element: <UserPage /> },
         { path: 'membership', element: <BlogPage /> },

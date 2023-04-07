@@ -16,6 +16,9 @@ const GREY = {
   900: '#161C24',
 };
 
+// SETUP COLORS
+const BLUE ='#EBEFFF';
+
 const PRIMARY = {
   lighter: '#D1E9FC',
   light: '#76B0F1',
@@ -93,7 +96,7 @@ const palette = {
   action: {
     active: GREY[600],
     hover: alpha(GREY[500], 0.08),
-    selected: alpha(GREY[500], 0.16),
+    selected: BLUE,
     disabled: alpha(GREY[500], 0.8),
     disabledBackground: alpha(GREY[500], 0.24),
     focus: alpha(GREY[500], 0.24),
