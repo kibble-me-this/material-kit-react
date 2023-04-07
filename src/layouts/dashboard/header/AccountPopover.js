@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -29,6 +29,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [userMetadata, setUserMetadata] = useState();
   const navigate = useNavigate();
 
   const handleOpen = (event) => {
@@ -38,6 +39,20 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  useEffect(() => {
+    // If user is logged in, retrieve the authenticated user's profile.
+    magic.user.isLoggedIn().then(magicIsLoggedIn => {
+      if (magicIsLoggedIn) {
+        magic.user.getMetadata().then(user => {
+          setUserMetadata(user);
+        });
+      } else {
+        // If no user is logged in, redirect to `/login`
+        navigate('/login', { replace: true });
+      }
+    });
+  }, []);  
 
   const logout = useCallback(() => {
     magic.user.logout().then(() => {

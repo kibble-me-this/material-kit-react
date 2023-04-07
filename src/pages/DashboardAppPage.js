@@ -118,18 +118,8 @@ export default function DashboardAppPage() {
 
   return userMetadata ? 
     <>
-
-      <div className="container">
-        <h1>Current user: {userMetadata.email || userMetadata.phoneNumber}</h1>
-        <button onClick={logout}>Logout</button>
-      </div>  
-      <div className="container">
-          <h1>Near account id</h1>
-          <div className="info">{userMetadata.publicAddress}</div>
-      </div>
-
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard | Petastic </title>
       </Helmet>
 
       <Container maxWidth="xl">

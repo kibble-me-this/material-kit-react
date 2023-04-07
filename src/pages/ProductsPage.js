@@ -96,7 +96,7 @@ export default function ProductsPage() {
   return userMetadata ?
     <>
       <Helmet>
-        <title> Dashboard: Pets | Petastic </title>
+        <title> Pets | Petastic </title>
       </Helmet>
 
       <Container>
