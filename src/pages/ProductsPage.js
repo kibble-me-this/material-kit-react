@@ -11,6 +11,7 @@ import { magic } from "../magic";
 import Loading from "./Loading";
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 import Iconify from '../components/iconify';
+import EmptyContent from '../components/empty-content';
 // mock
 // import PRODUCTS from '../_mock/products';
 
@@ -93,6 +94,9 @@ export default function ProductsPage() {
     setPetCount(res.length);
  }   
 
+ const isEmptyCart = !petCount;
+
+
   return userMetadata ?
     <>
       <Helmet>
@@ -122,7 +126,16 @@ export default function ProductsPage() {
             <ProductSort />
           </Stack>
         </Stack>
-        <ProductList pets={userPets} />
+        {!isEmptyCart ? (
+          <ProductList pets={userPets} />
+        ) : (
+          <EmptyContent
+            title="Hello there."
+            description="No pets yet."
+            img="/assets/illustrations/illustration_empty_cart.svg"
+          />          
+        )}
+
       </Container>
     </>: <Loading />
 }
