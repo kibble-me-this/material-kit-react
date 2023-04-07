@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Link, Container, Typography, Divider, Stack, Button } from '@mui/material';
+import { Link, Container, Typography, Divider, Stack, Button, Box } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -20,12 +20,14 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 const StyledSection = styled('div')(({ theme }) => ({
   width: '100%',
+  height: '100vh', // <-- add this line
   maxWidth: 480,
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',
   boxShadow: theme.customShadows.card,
   backgroundColor: theme.palette.background.default,
+  padding: '40px',
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
@@ -35,7 +37,6 @@ const StyledContent = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'center',
   flexDirection: 'column',
-  padding: theme.spacing(12, 0),
 }));
 
 // ----------------------------------------------------------------------
@@ -46,38 +47,27 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Login | Petastic </title>
       </Helmet>
 
       <StyledRoot>
-        <Logo
-          sx={{
-            position: 'fixed',
-            top: { xs: 16, sm: 24, md: 40 },
-            left: { xs: 16, sm: 24, md: 40 },
-          }}
-        />
-
-        {mdUp && (
           <StyledSection>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
-            </Typography>
-            <img src="/assets/illustrations/illustration_login.png" alt="login" />
-          </StyledSection>
-        )}
-
-        <Container maxWidth="sm">
-          <StyledContent>
+            <Box sx={{ display: 'inline-flex' }}>
+              <Logo />
+            </Box>
             <Typography variant="h4" gutterBottom>
-              Sign in to Minimal
+              Sign in
             </Typography>
-
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
               <Link variant="subtitle2">Get started</Link>
             </Typography>
-
+            <LoginForm />
+            <Divider sx={{ my: 3 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                OR
+              </Typography>
+            </Divider>
             <Stack direction="row" spacing={2}>
               <Button fullWidth size="large" color="inherit" variant="outlined">
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
@@ -91,16 +81,20 @@ export default function LoginPage() {
                 <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
               </Button>
             </Stack>
-
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                OR
+            {!mdUp && (
+              <Typography  variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+              Hi, Welcome Back
               </Typography>
-            </Divider>
-
-            <LoginForm />
+            )}
+          </StyledSection>
+        
+         {mdUp && (<Container maxWidth="sm">
+          <StyledContent>
+          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+              Hi, Welcome Back
+            </Typography>
           </StyledContent>
-        </Container>
+        </Container>)}
       </StyledRoot>
     </>
   );
