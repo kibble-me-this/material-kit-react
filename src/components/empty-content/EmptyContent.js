@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
@@ -18,8 +19,9 @@ EmptyContent.propTypes = {
   description: PropTypes.string,
 };
 
-export default function EmptyContent({ title, description, img, sx, ...other }) {
+export default function EmptyContent({ title, description, isEmptyWallet, sx, ...other }) {
   const navigate = useNavigate();
+  const [isButtonEnabled, setIsButtonEnabled] = useState(!isEmptyWallet);
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -38,7 +40,7 @@ export default function EmptyContent({ title, description, img, sx, ...other }) 
       <EmptyImage
         disabledEffect
         alt="empty content"
-        src={img || '/assets/illustrations/illustration_empty_content.svg'}
+        src={'/assets/illustrations/illustration_empty_content.svg'}
         sx={{ height: 240, mb: 3 }}
       />
 
@@ -51,7 +53,7 @@ export default function EmptyContent({ title, description, img, sx, ...other }) 
             {description}
           </Typography>
           <Link to="/dashboard/blank">
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            <Button  disabled={!isButtonEnabled} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
               New Pet
             </Button>
           </Link></>

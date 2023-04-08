@@ -132,9 +132,8 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
         <CardContent sx={{ maxHeight: 300 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              Recent
+              How many pets are in your family?
             </Typography>
-            <Link sx={{ typography: 'button' }}>View All</Link>
           </Stack>
 
           <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
@@ -197,7 +196,6 @@ InputAmount.propTypes = {
 function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
   return (
     <Stack direction="row" justifyContent="center" spacing={1} sx={sx}>
-      <Typography variant="h5">$</Typography>
 
       <Input
         disableUnderline

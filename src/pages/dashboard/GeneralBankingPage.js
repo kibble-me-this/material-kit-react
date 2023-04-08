@@ -1,31 +1,27 @@
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-// @mui
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Stack } from '@mui/material';
-// _mock_
+import { Grid, Container, Stack, Button, Modal, Box } from '@mui/material';
 import {
   _bankingContacts,
   _bankingCreditCard,
   _bankingRecentTransitions,
 } from '../../_mock/arrays';
-// import { useSettingsContext } from '../../components/settings';
-// sections
 import {
-  BankingContacts,
-  BankingWidgetSummary,
-  BankingInviteFriends,
   BankingQuickTransfer,
-  BankingCurrentBalance,
-  BankingBalanceStatistics,
-  BankingRecentTransitions,
-  BankingExpensesCategories,
 } from '../../sections/@dashboard/general/banking';
 
-// ----------------------------------------------------------------------
 export default function GeneralBankingPage() {
   const theme = useTheme();
+  const [open, setOpen] = useState(true);
 
-  // const { themeStretch } = useSettingsContext();
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -33,11 +29,16 @@ export default function GeneralBankingPage() {
         <title> General: Banking | Minimal UI</title>
       </Helmet>
 
-      <Container>
-        <Grid container>
-            <BankingQuickTransfer title="Quick Transfer" list={_bankingContacts} />
-        </Grid>
-      </Container>
+
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+          <Container>
+            <Grid container>
+              <BankingQuickTransfer title="Quick Transfer" list={_bankingContacts} />
+            </Grid>
+          </Container>
+        </Box>
+      </Modal>
     </>
   );
 }

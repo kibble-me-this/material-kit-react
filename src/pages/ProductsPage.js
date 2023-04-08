@@ -24,6 +24,7 @@ export default function ProductsPage() {
   const [userMetadata, setUserMetadata] = useState();
   const [openFilter, setOpenFilter] = useState(false);
   const [petCount, setPetCount] = useState(null);
+  const [nearBalance, setNearBalance] = useState(null);
   const [userPets, setUserPets] = useState([]);
   const navigate = useNavigate();
   const networkId = "testnet"; // testnet, betanet, or mainnet
@@ -59,7 +60,8 @@ export default function ProductsPage() {
       if (magicIsLoggedIn) {
         magic.user.getMetadata().then(user => {
           setUserMetadata(user);
-          getPPPTokensForOwner(user.publicAddress); 
+          handleFetchBalance(user.publicAddress);
+          handleFetchPassports(user.publicAddress); 
         });
       } else {
         // If no user is logged in, redirect to `/login`
@@ -68,7 +70,7 @@ export default function ProductsPage() {
     });
   }, []);   
 
-   async function getPPPTokensForOwner(account_id) {
+   async function handleFetchPassports(account_id) {
         
     const provider = new nearAPI.providers.JsonRpcProvider(
        `https://rpc.${networkId}.near.org`
@@ -92,9 +94,21 @@ export default function ProductsPage() {
   
     setUserPets(res);
     setPetCount(res.length);
- }   
+ }
+
+ const handleFetchBalance = async (account_id) => {
+  const account = await near.account(account_id);
+  account.getAccountBalance().then(bal => {
+    setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
+     
+     // if(nearAPI.utils.format.formatNearAmount(bal.total)==0){
+     //   toggleRequestInviteVisibility();
+     // }
+  });
+}
 
  const isEmptyCart = !petCount;
+ const isEmptyWallet = !nearBalance;
 
 
   return userMetadata ?
@@ -137,7 +151,7 @@ export default function ProductsPage() {
           <EmptyContent
             title="Hello there."
             description="No pets yet."
-            img="/assets/illustrations/illustration_empty_cart.svg"
+            isEmptyWallet={isEmptyWallet}
           />          
         )}
 
