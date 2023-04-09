@@ -24,6 +24,8 @@ import {
 
 // ----------------------------------------------------------------------
 
+import CHECK_MARK from '../../../../assets/images/Icon.svg'
+
 const STEP = 50;
 const MIN_AMOUNT = 0;
 const AVATAR_SIZE = 40;
@@ -120,7 +122,7 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
 
   return (
     <>
-<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 400 }}>
+<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 {step === 1 ? (
     <Typography   sx={{
       fontSize: "26px",
@@ -132,7 +134,7 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     }} >Reserve your spot to a whole new pet experience.</Typography>
   ) : ( 
     <Stack direction="row" alignItems="center" marginBottom = '32px'>
-      <Avatar src={getContactInfo?.avatar} sx={{ width: 24, height: 24 }} />
+      <Avatar src={CHECK_MARK} sx={{ width: 24, height: 24, mr: 1 }} />
       <Typography sx={{
       fontSize: "26px",
       fontWeight: "800",
@@ -143,10 +145,10 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     </Stack>
   )}  
   <Card sx={{   
-    width: "344px",
-    background: "#f5f5f5",
+    width: "375px",
     boxShadow: "0px 12px 30px rgba(19, 31, 102, 0.1)",
-    borderRadius: "16px", }}>    
+    borderRadius: "16px",
+    background: "linear-gradient(110.25deg, rgba(255, 255, 255, 0.6) 0.67%, rgba(255, 255, 255, 0.04) 99.33%)", }}>    
   <CardContent sx={{ padding: theme.spacing(4) }}>
       {step === 1 && (
         <Stack spacing={3}>
@@ -265,38 +267,70 @@ function ConfirmTransferDialog({
 }) {
   return (
       <>
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <div>
+        <Box sx={{ p: 2 }}>
+        <Stack direction="row" alignItems="center"  justifyContent="center" sx={{ pb: 4 }}>
             <Typography sx={{
             fontSize: "16px",
             fontWeight: "400",
             textAlign: "center",
             color: "#343A40",
           }}>Your <Typography component="span" sx={{ color: "#2C4CFF" }}>{amount}</Typography> pets have reserved their spot.</Typography>
-          </div>
         </Stack>
-        <Stack direction="row" alignItems="center" justifyContent="center" spacing={1} sx={{ p: 3, pb: 0 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', pr: 1 }}>
-            <InputAmount
-              onBlur={onBlur}
-              onChange={onChange}
-              autoWidth={autoWidth}
-              amount={amount}
-              sx={{ justifyContent: 'flex-end' }}
-            />
-            <Typography variant="caption" sx={{ color: '#6B6B6B' }}>Pets in front of you</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', pr: 1, borderLeft: '1px solid rgba(0, 0, 0, 0.12)' }}>
-            <InputAmount
-              onBlur={onBlur}
-              onChange={onChange}
-              autoWidth={autoWidth}
-              amount={amount}
-              sx={{ justifyContent: 'flex-end' }}
-            />
-            <Typography variant="caption" sx={{ color: '#6B6B6B' }}>Pets in behind you</Typography>
-          </Box>
+        <Stack direction="row" alignItems="center" justifyContent="center" >
+          <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  '& .MuiInputBase-input': {
+                    fontSize: '24px',
+                    fontWeight: '800',
+                    textAlign: 'center',
+                    color: '#343A40',
+                  },
+                  paddingRight: '24px',
+                }}>
+              <InputAmount
+                onBlur={onBlur}
+                onChange={onChange}
+                autoWidth={autoWidth}
+                amount={amount}
+              />
+              <Typography sx={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  textAlign: "center", 
+                  color: '#6B6B6B' }}>Pets in front of you</Typography>
+            </Box>
+            <Box sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderLeft: '1px solid rgba(0, 0, 0, 0.12)',
+                  '& .MuiInputBase-input': {
+                    fontSize: '24px',
+                    fontWeight: '800',
+                    textAlign: 'center',
+                    color: '#343A40',
+                  },
+                  paddingLeft: '24px',
+
+                }}>            
+              <InputAmount
+                onBlur={onBlur}
+                onChange={onChange}
+                autoWidth={autoWidth}
+                amount={amount}
+              />
+              <Typography sx={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  textAlign: "center", 
+                  color: '#6B6B6B' }}>Pets in behind you</Typography>
+            </Box>
         </Stack>
+        </Box>
       </>
   );
 }
