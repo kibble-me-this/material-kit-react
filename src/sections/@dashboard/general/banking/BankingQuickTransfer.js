@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import emailjs from "@emailjs/browser";
+import { useCookies } from "react-cookie";
+
 import { useState, useEffect, useRef } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -54,6 +56,11 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
   const carouselRef = useRef(null);
   const getContactInfo = list.find((_, index) => index === selectContact);
   const [emailSent, setEmailSent] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(0);
+  const [cookies, setCookie, removeCookie] = useCookies(["userData"]);
+
+
+
 
 
   useEffect(() => {
@@ -95,32 +102,19 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
     }
   };
 
-  const handleNext = () => {
-    if (selectContact < list.length - 1) {
-      setSelectContact(selectContact + 1);
-    } else {
-      setSelectContact(0);
-    }
-  };
-
-  const handlePrev = () => {
-    if (selectContact > 0) {
-      setSelectContact(selectContact - 1);
-    } else {
-      setSelectContact(list.length - 1);
-    }
-  };
-
-  const handleConfirm = () => {
-    // API call to confirm transfer
-    handleCloseModal();
-    alert(`Successfully transferred ${amount} to ${getContactInfo.name}`);
-  };
-
   const handleStepChange = () => {
     setStep(2);
   }
   
+  useEffect(() => {
+    if (cookies.userData) {
+      // handleStepChange();
+      // setSelectedValue(cookies.userData.petCount);
+      // setEmailSent(true);
+      console.log(cookies.userData);
+    }
+  }, []);
+
   const form = useRef();
 
   const sendEmail = (e) => {
@@ -138,7 +132,7 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
           console.log(result.text);
           setEmailSent(true);
           handleStepChange();
-          // setCookie("userData", { spinboxValue: selectedValue });
+          setCookie("userData", { petCount: form.current });
         },
         (error) => {
           console.log(error.text);
@@ -303,14 +297,24 @@ ConfirmTransferDialog.propTypes = {
 };
 
 function ConfirmTransferDialog({
-  open,
   amount,
-  autoWidth,
-  contactInfo,
-  onClose,
-  onBlur,
-  onChange,
 }) {
+
+  const petWord = amount === 1 ? "pet" : "pets";
+  const petVerb = amount === 1 ? "has" : "have";
+  const petPronoun = amount === 1 ? "its" : "their";
+  const [cookies, setCookie, removeCookie] = useCookies(["userData"]);
+
+
+  useEffect(() => {
+    if (cookies.userData) {
+      // setSelectedValue(cookies.userData.petCount);
+      // setEmailSent(true);
+      console.log(cookies.userData);
+    }
+  }, []);
+
+
   return (
       <>
         <Box sx={{ p: 2 }}>
@@ -320,7 +324,7 @@ function ConfirmTransferDialog({
             fontWeight: "400",
             textAlign: "center",
             color: "#343A40",
-          }}>Your <Typography component="span" sx={{ color: "#2C4CFF" }}>{amount}</Typography> pets have reserved their spot.</Typography>
+          }}>Your <Typography component="span" sx={{ color: "#2C4CFF" }}>{amount}</Typography> {petWord} {petVerb} reserved {petPronoun} spot.</Typography>
         </Stack>
         <Stack direction="row" alignItems="center" justifyContent="center" >
           <Box sx={{
