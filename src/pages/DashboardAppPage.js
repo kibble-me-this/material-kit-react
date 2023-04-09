@@ -133,7 +133,7 @@ return userMetadata ?
           <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
             <Container>
               <Grid container>
-                <BankingQuickTransfer title="" subheader="" list={_bankingContacts} />
+                <BankingQuickTransfer title="" subheader="" list={_bankingContacts} user={userMetadata}/>
               </Grid>
             </Container>
           </Box>

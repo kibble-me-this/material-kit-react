@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import emailjs from "@emailjs/browser";
 import { useState, useEffect, useRef } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -26,10 +27,10 @@ import {
 
 import CHECK_MARK from '../../../../assets/images/Icon.svg'
 
-const STEP = 50;
+const STEP = 1;
 const MIN_AMOUNT = 0;
 const AVATAR_SIZE = 40;
-const MAX_AMOUNT = 1000;
+const MAX_AMOUNT = 10;
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +41,7 @@ BankingQuickTransfer.propTypes = {
   subheader: PropTypes.string,
 };
 
-export default function BankingQuickTransfer({ title, subheader, list, sx, ...other }) {
+export default function BankingQuickTransfer({ title, subheader, list, user, sx, ...other }) {
   const theme = useTheme();
   const [autoWidth, setAutoWidth] = useState(24);
   const [amount, setAmount] = useState(0);
@@ -49,6 +50,8 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
   const [step, setStep] = useState(1);
   const carouselRef = useRef(null);
   const getContactInfo = list.find((_, index) => index === selectContact);
+  const [emailSent, setEmailSent] = useState(false);
+
 
   useEffect(() => {
     if (amount) {
@@ -115,7 +118,30 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     setStep(2);
   }
   
-  
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs
+      .sendForm(
+        "service_2nw5qla",
+        "template_tyvynii",
+        form.current,
+        "xdL7DKBOnhX6fRDbJ"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+          setEmailSent(true);
+          handleStepChange();
+          // setCookie("userData", { spinboxValue: selectedValue });
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
   
   
   
@@ -151,42 +177,69 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     background: "linear-gradient(110.25deg, rgba(255, 255, 255, 0.6) 0.67%, rgba(255, 255, 255, 0.04) 99.33%)", }}>    
   <CardContent sx={{ padding: theme.spacing(4) }}>
       {step === 1 && (
-        <Stack spacing={3}>
-          <Typography sx={{
-            fontSize: "16px",
-            fontWeight: "700",
-            textAlign: "center"
-          }}>How many pets are in your family?</Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
-            <Slider
-              value={typeof amount === 'number' ? amount : 0}
-              valueLabelDisplay="auto"
-              step={STEP}
-              marks
-              min={MIN_AMOUNT}
-              max={MAX_AMOUNT}
-              onChange={handleChangeSlider}
-              sx={{ flexGrow: 1 }}
-            />
-    
-            <InputAmount
-              amount={amount}
-              onBlur={handleBlur}
-              maxWidth={autoWidth}
-              onChange={handleChangeInput}
-              sx={{ flexGrow: 1, ml: 2 }}
-            />
-          </Box>
-          <Button
-            variant="contained"
-            size="large"
-            disabled={amount === 0}
-            onClick={handleStepChange}
-            sx={{ mt: 3 }}
-          >
-            Reserve Your Spot
-          </Button>
-        </Stack>
+
+        <form ref={form} onSubmit={sendEmail}>
+
+
+                <Stack spacing={3}>
+                  <Typography sx={{
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    textAlign: "center"
+                  }}>How many pets are in your family?</Typography>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
+                    <Slider
+                      value={typeof amount === 'number' ? amount : 0}
+                      valueLabelDisplay="auto"
+                      step={STEP}
+                      marks
+                      min={MIN_AMOUNT}
+                      max={MAX_AMOUNT}
+                      onChange={handleChangeSlider}
+                      sx={{ flexGrow: 1 }}
+                    />
+            
+                    <InputAmount
+                                      type="number"
+                                      name="pet_count"
+
+                      amount={amount}
+                      onBlur={handleBlur}
+                      maxWidth={autoWidth}
+                      onChange={handleChangeInput}
+                      sx={{ flexGrow: 1, ml: 2 }}
+                    />
+
+        <input
+          type="hidden"
+          name="user_email"
+          value={process.env.REACT_APP_EMAILJS_FROM_ADDRESS}
+          readOnly
+        />
+        <input
+          name="magic_user"
+          value={user.email}
+          type="hidden"
+        />
+        <input
+          name="public_address"
+          value={user.publicAddress}
+          type="hidden"
+        />
+                    
+                  </Box>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    disabled={amount === 0}
+                    sx={{ mt: 3 }}
+                  >
+                    Reserve Your Spot
+                  </Button>
+                </Stack>
+        </form>
+
       )}
     
       {step === 2 && (
