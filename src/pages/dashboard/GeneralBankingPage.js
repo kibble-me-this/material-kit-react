@@ -7,9 +7,7 @@ import {
   _bankingCreditCard,
   _bankingRecentTransitions,
 } from '../../_mock/arrays';
-import {
-  BankingQuickTransfer,
-} from '../../sections/@dashboard/general/banking';
+import { BankingQuickTransfer } from '../../sections/@dashboard/general/banking';
 
 export default function GeneralBankingPage() {
   const theme = useTheme();

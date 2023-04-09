@@ -19,20 +19,14 @@ import {
   DialogTitle,
   CardContent,
   DialogActions,
+  DialogContent,
 } from '@mui/material';
-// utils
-import { fCurrency } from '../../../../utils/formatNumber';
-// components
-import Carousel, { CarouselArrows } from '../../../../components/carousel';
 
 // ----------------------------------------------------------------------
 
 const STEP = 50;
-
 const MIN_AMOUNT = 0;
-
 const AVATAR_SIZE = 40;
-
 const MAX_AMOUNT = 1000;
 
 // ----------------------------------------------------------------------
@@ -46,39 +40,13 @@ BankingQuickTransfer.propTypes = {
 
 export default function BankingQuickTransfer({ title, subheader, list, sx, ...other }) {
   const theme = useTheme();
-
-  const carouselRef = useRef(null);
-
   const [autoWidth, setAutoWidth] = useState(24);
-
   const [amount, setAmount] = useState(0);
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
+  const [openModal, setOpenModal] = useState(false);
   const [selectContact, setSelectContact] = useState(0);
-
+  const [step, setStep] = useState(1);
+  const carouselRef = useRef(null);
   const getContactInfo = list.find((_, index) => index === selectContact);
-
-  const carouselSettings = {
-    dots: false,
-    arrows: false,
-    centerMode: true,
-    swipeToSlide: true,
-    focusOnSelect: true,
-    centerPadding: '0px',
-    slidesToShow: list.length > 7 ? 7 : list.length,
-    rtl: Boolean(theme.direction === 'rtl'),
-    beforeChange: (current, next) => setSelectContact(next),
-    responsive: [
-      {
-        // Down xl
-        breakpoint: theme.breakpoints.values.xl,
-        settings: {
-          slidesToShow: list.length > 5 ? 5 : list.length,
-        },
-      },
-    ],
-  };
 
   useEffect(() => {
     if (amount) {
@@ -87,12 +55,15 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
+  const handleOpenModal = () => {
+    setOpenModal(true);
   };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setStep(1);
+    setSelectContact(0);
+    setAmount(0);
   };
 
   const handleAutoWidth = () => {
@@ -116,26 +87,74 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
     }
   };
 
-  const handlePrev = () => {
-    carouselRef.current?.slickPrev();
+  const handleNext = () => {
+    if (selectContact < list.length - 1) {
+      setSelectContact(selectContact + 1);
+    } else {
+      setSelectContact(0);
+    }
   };
 
-  const handleNext = () => {
-    carouselRef.current?.slickNext();
+  const handlePrev = () => {
+    if (selectContact > 0) {
+      setSelectContact(selectContact - 1);
+    } else {
+      setSelectContact(list.length - 1);
+    }
   };
+
+  const handleConfirm = () => {
+    // API call to confirm transfer
+    handleCloseModal();
+    alert(`Successfully transferred ${amount} to ${getContactInfo.name}`);
+  };
+
+  const handleStepChange = () => {
+    setStep(2);
+  }
+  
+  
+  
+  
+  
 
   return (
     <>
-      <Card sx={{ width: 400, height: 300 }}>
-        <CardHeader title={title} subheader={subheader} />
-
-        <CardContent sx={{ maxHeight: 300 }}>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="overline" sx={{ color: 'text.secondary' }}>
-              How many pets are in your family?
-            </Typography>
-          </Stack>
-
+<Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 400 }}>
+{step === 1 ? (
+    <Typography   sx={{
+      fontSize: "26px",
+      fontWeight: "800",
+      textAlign: "center",
+      lineHeight: '132%',
+      color: '#343A40',
+      marginBottom: '32px',
+    }} >Reserve your spot to a whole new pet experience.</Typography>
+  ) : ( 
+    <Stack direction="row" alignItems="center" marginBottom = '32px'>
+      <Avatar src={getContactInfo?.avatar} sx={{ width: 24, height: 24 }} />
+      <Typography sx={{
+      fontSize: "26px",
+      fontWeight: "800",
+      textAlign: "center",
+      lineHeight: '132%',
+      color: '#343A40',
+    }} >Reservation Complete</Typography> 
+    </Stack>
+  )}  
+  <Card sx={{   
+    width: "344px",
+    background: "#f5f5f5",
+    boxShadow: "0px 12px 30px rgba(19, 31, 102, 0.1)",
+    borderRadius: "16px", }}>    
+  <CardContent sx={{ padding: theme.spacing(4) }}>
+      {step === 1 && (
+        <Stack spacing={3}>
+          <Typography sx={{
+            fontSize: "16px",
+            fontWeight: "700",
+            textAlign: "center"
+          }}>How many pets are in your family?</Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
             <Slider
               value={typeof amount === 'number' ? amount : 0}
@@ -147,38 +166,43 @@ export default function BankingQuickTransfer({ title, subheader, list, sx, ...ot
               onChange={handleChangeSlider}
               sx={{ flexGrow: 1 }}
             />
-
+    
             <InputAmount
               amount={amount}
               onBlur={handleBlur}
-              autoWidth={autoWidth}
+              maxWidth={autoWidth}
               onChange={handleChangeInput}
               sx={{ flexGrow: 1, ml: 2 }}
             />
           </Box>
-
           <Button
             variant="contained"
             size="large"
             disabled={amount === 0}
-            onClick={handleOpenConfirm}
+            onClick={handleStepChange}
             sx={{ mt: 3 }}
           >
-            Transfer Now
+            Reserve Your Spot
           </Button>
-        </CardContent>
-      </Card>
+        </Stack>
+      )}
+    
+      {step === 2 && (
+        <ConfirmTransferDialog
+          open={openModal}
+          autoWidth={autoWidth}
+          amount={amount}
+          contactInfo={getContactInfo}
+          onClose={handleCloseModal}
+          onBlur={handleBlur}
+          onChange={handleChangeInput}
+        />
+      )}
+    </CardContent>
+  </Card>
+</Box>
 
 
-      <ConfirmTransferDialog
-        open={openConfirm}
-        autoWidth={autoWidth}
-        amount={amount}
-        contactInfo={getContactInfo}
-        onClose={handleCloseConfirm}
-        onBlur={handleBlur}
-        onChange={handleChangeInput}
-      />
     </>
   );
 }
@@ -205,7 +229,7 @@ function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
         onBlur={onBlur}
         inputProps={{ step: STEP, min: MIN_AMOUNT, max: MAX_AMOUNT, type: 'number' }}
         sx={{
-          typography: 'h3',
+          typography: 'h5',
           '& input': {
             p: 0,
             textAlign: 'center',
@@ -240,40 +264,39 @@ function ConfirmTransferDialog({
   onChange,
 }) {
   return (
-    <Dialog open={open} fullWidth maxWidth="xs" onClose={onClose}>
-      <DialogTitle>Transfer to</DialogTitle>
-
-      <Stack spacing={3} sx={{ p: 3, pb: 0 }}>
+      <>
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar src={contactInfo?.avatar} sx={{ width: 48, height: 48 }} />
-
           <div>
-            <Typography variant="subtitle2">{contactInfo?.name}</Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {contactInfo?.email}
-            </Typography>
+            <Typography sx={{
+            fontSize: "16px",
+            fontWeight: "400",
+            textAlign: "center",
+            color: "#343A40",
+          }}>Your <Typography component="span" sx={{ color: "#2C4CFF" }}>{amount}</Typography> pets have reserved their spot.</Typography>
           </div>
         </Stack>
-
-        <InputAmount
-          onBlur={onBlur}
-          onChange={onChange}
-          autoWidth={autoWidth}
-          amount={amount}
-          disableUnderline={false}
-          sx={{ justifyContent: 'flex-end' }}
-        />
-
-        <TextField fullWidth multiline rows={2} placeholder="Write a message..." />
-      </Stack>
-
-      <DialogActions>
-        <Button variant="contained" disabled={amount === 0} onClick={onClose}>
-          Confirm & Transfer
-        </Button>
-
-        <Button onClick={onClose}>Cancel</Button>
-      </DialogActions>
-    </Dialog>
+        <Stack direction="row" alignItems="center" justifyContent="center" spacing={1} sx={{ p: 3, pb: 0 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', pr: 1 }}>
+            <InputAmount
+              onBlur={onBlur}
+              onChange={onChange}
+              autoWidth={autoWidth}
+              amount={amount}
+              sx={{ justifyContent: 'flex-end' }}
+            />
+            <Typography variant="caption" sx={{ color: '#6B6B6B' }}>Pets in front of you</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', pr: 1, borderLeft: '1px solid rgba(0, 0, 0, 0.12)' }}>
+            <InputAmount
+              onBlur={onBlur}
+              onChange={onChange}
+              autoWidth={autoWidth}
+              amount={amount}
+              sx={{ justifyContent: 'flex-end' }}
+            />
+            <Typography variant="caption" sx={{ color: '#6B6B6B' }}>Pets in behind you</Typography>
+          </Box>
+        </Stack>
+      </>
   );
 }

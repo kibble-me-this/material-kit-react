@@ -21,8 +21,8 @@ let near;
 // ----------------------------------------------------------------------
 
 export default function ProductsPage() {
-  const [userMetadata, setUserMetadata] = useState();
   const [openFilter, setOpenFilter] = useState(false);
+  const [userMetadata, setUserMetadata] = useState();
   const [petCount, setPetCount] = useState(null);
   const [nearBalance, setNearBalance] = useState(null);
   const [userPets, setUserPets] = useState([]);
@@ -100,16 +100,11 @@ export default function ProductsPage() {
   const account = await near.account(account_id);
   account.getAccountBalance().then(bal => {
     setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
-     
-     // if(nearAPI.utils.format.formatNearAmount(bal.total)==0){
-     //   toggleRequestInviteVisibility();
-     // }
   });
 }
 
  const isEmptyCart = !petCount;
  const isEmptyWallet = !nearBalance;
-
 
   return userMetadata ?
     <>
