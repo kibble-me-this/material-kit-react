@@ -31,6 +31,9 @@ const STEP = 1;
 const MIN_AMOUNT = 0;
 const AVATAR_SIZE = 40;
 const MAX_AMOUNT = 10;
+const LINE_FRONT = 10000;
+const LINE_BEHIND = 50000;
+const formattedLineBehind = LINE_BEHIND.toLocaleString();
 
 // ----------------------------------------------------------------------
 
@@ -143,9 +146,6 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
       );
   };
   
-  
-  
-
   return (
     <>
 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -177,67 +177,60 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
     background: "linear-gradient(110.25deg, rgba(255, 255, 255, 0.6) 0.67%, rgba(255, 255, 255, 0.04) 99.33%)", }}>    
   <CardContent sx={{ padding: theme.spacing(4) }}>
       {step === 1 && (
-
         <form ref={form} onSubmit={sendEmail}>
-
-
-                <Stack spacing={3}>
-                  <Typography sx={{
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    textAlign: "center"
-                  }}>How many pets are in your family?</Typography>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
-                    <Slider
-                      value={typeof amount === 'number' ? amount : 0}
-                      valueLabelDisplay="auto"
-                      step={STEP}
-                      marks
-                      min={MIN_AMOUNT}
-                      max={MAX_AMOUNT}
-                      onChange={handleChangeSlider}
-                      sx={{ flexGrow: 1 }}
-                    />
-            
-                    <InputAmount
-                                      type="number"
-                                      name="pet_count"
-
-                      amount={amount}
-                      onBlur={handleBlur}
-                      maxWidth={autoWidth}
-                      onChange={handleChangeInput}
-                      sx={{ flexGrow: 1, ml: 2 }}
-                    />
-
-        <input
-          type="hidden"
-          name="user_email"
-          value={process.env.REACT_APP_EMAILJS_FROM_ADDRESS}
-          readOnly
-        />
-        <input
-          name="magic_user"
-          value={user.email}
-          type="hidden"
-        />
-        <input
-          name="public_address"
-          value={user.publicAddress}
-          type="hidden"
-        />
-                    
-                  </Box>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    size="large"
-                    disabled={amount === 0}
-                    sx={{ mt: 3 }}
-                  >
-                    Reserve Your Spot
-                  </Button>
-                </Stack>
+          <Stack spacing={3}>
+            <Typography sx={{
+              fontSize: "16px",
+              fontWeight: "700",
+              textAlign: "center"
+            }}>How many pets are in your family?</Typography>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
+              <Slider
+                value={typeof amount === 'number' ? amount : 0}
+                valueLabelDisplay="auto"
+                step={STEP}
+                marks
+                min={MIN_AMOUNT}
+                max={MAX_AMOUNT}
+                onChange={handleChangeSlider}
+                sx={{ flexGrow: 1 }}
+              />
+              <InputAmount
+                type="number"
+                name="pet_count"
+                amount={amount}
+                onBlur={handleBlur}
+                maxWidth={autoWidth}
+                onChange={handleChangeInput}
+                sx={{ flexGrow: 1, ml: 2 }}
+              />
+              <input
+                type="hidden"
+                name="user_email"
+                value={process.env.REACT_APP_EMAILJS_FROM_ADDRESS}
+                readOnly
+              />
+              <input
+                name="magic_user"
+                value={user.email}
+                type="hidden"
+              />
+              <input
+                name="public_address"
+                value={user.publicAddress}
+                type="hidden"
+              />
+            </Box>
+            <Button
+              type="submit"
+              variant="contained"
+              size="large"
+              disabled={amount === 0}
+              sx={{ mt: 3 }}
+            >
+              Reserve Your Spot
+            </Button>
+          </Stack>
         </form>
 
       )}
@@ -288,7 +281,7 @@ function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
           '& input': {
             p: 0,
             textAlign: 'center',
-            width: autoWidth,
+            width: '100px',
           },
         }}
         {...other}
@@ -343,12 +336,13 @@ function ConfirmTransferDialog({
                   },
                   paddingRight: '24px',
                 }}>
-              <InputAmount
-                onBlur={onBlur}
-                onChange={onChange}
-                autoWidth={autoWidth}
-                amount={amount}
-              />
+              <Typography
+                sx={{
+                  fontSize: "24px",
+                  fontWeight: "800",
+                  textAlign: "center", 
+                  color: '#343A40' }}
+              >{LINE_FRONT.toLocaleString()}</Typography>
               <Typography sx={{
                   fontSize: "12px",
                   fontWeight: "400",
@@ -370,12 +364,13 @@ function ConfirmTransferDialog({
                   paddingLeft: '24px',
 
                 }}>            
-              <InputAmount
-                onBlur={onBlur}
-                onChange={onChange}
-                autoWidth={autoWidth}
-                amount={amount}
-              />
+              <Typography
+                sx={{
+                  fontSize: "24px",
+                  fontWeight: "800",
+                  textAlign: "center", 
+                  color: '#343A40' }}
+              >{LINE_BEHIND.toLocaleString()}</Typography>
               <Typography sx={{
                   fontSize: "12px",
                   fontWeight: "400",
