@@ -118,7 +118,7 @@ export default function ProductsPage() {
           <Typography variant="h4" gutterBottom>
           My Pets
           </Typography>
-           {!isEmptyCart &&
+           {isEmptyCart &&
            <Link to="/dashboard/blank">
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
               New Pet

@@ -21,7 +21,6 @@ EmptyContent.propTypes = {
 
 export default function EmptyContent({ title, description, isEmptyWallet, sx, ...other }) {
   const navigate = useNavigate();
-  const [isButtonEnabled, setIsButtonEnabled] = useState(!isEmptyWallet);
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -52,9 +51,9 @@ export default function EmptyContent({ title, description, isEmptyWallet, sx, ..
         <><Typography variant="body2" sx={{acolor: 'text.secondary' }}>
             {description}
           </Typography>
-          <Link to="/dashboard/blank">
-            <Button  disabled={!isButtonEnabled} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-              New Pet
+          <Link to="/dashboard/blank"  underline="none">
+            <Button  disabled={Boolean(isEmptyWallet)} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Pets
             </Button>
           </Link></>
       )}

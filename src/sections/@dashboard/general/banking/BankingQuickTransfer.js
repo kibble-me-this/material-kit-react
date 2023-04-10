@@ -205,7 +205,7 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
               type="submit"
               variant="contained"
               size="large"
-              disabled={amount === 1}
+              disabled={amount < 1}
               sx={{ mt: 3 }}
             >
               Reserve Your Spot
