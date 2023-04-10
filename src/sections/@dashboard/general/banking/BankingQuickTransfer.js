@@ -1,36 +1,29 @@
 import PropTypes from 'prop-types';
 import emailjs from "@emailjs/browser";
 import { useCookies } from "react-cookie";
-
 import { useState, useEffect, useRef } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Card,
-  Link,
   Stack,
   Input,
   Button,
   Avatar,
-  Dialog,
   Slider,
-  Tooltip,
-  TextField,
   Typography,
-  CardHeader,
-  DialogTitle,
   CardContent,
-  DialogActions,
-  DialogContent,
 } from '@mui/material';
+
+import useLocalStorage from '../../../../hooks/useLocalStorage';
 
 // ----------------------------------------------------------------------
 
 import CHECK_MARK from '../../../../assets/images/Icon.svg'
 
 const STEP = 1;
-const MIN_AMOUNT = 0;
+const MIN_AMOUNT = 1;
 const AVATAR_SIZE = 40;
 const MAX_AMOUNT = 10;
 const LINE_FRONT = 10000;
@@ -49,7 +42,7 @@ BankingQuickTransfer.propTypes = {
 export default function BankingQuickTransfer({ title, subheader, list, user, sx, ...other }) {
   const theme = useTheme();
   const [autoWidth, setAutoWidth] = useState(24);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(1);
   const [openModal, setOpenModal] = useState(false);
   const [selectContact, setSelectContact] = useState(0);
   const [step, setStep] = useState(1);
@@ -57,11 +50,8 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
   const getContactInfo = list.find((_, index) => index === selectContact);
   const [emailSent, setEmailSent] = useState(false);
   const [selectedValue, setSelectedValue] = useState(0);
-  const [cookies, setCookie, removeCookie] = useCookies(["userData"]);
-
-
-
-
+  const [storedCount, setStoredCount] = useLocalStorage('petCount', 0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (amount) {
@@ -69,6 +59,12 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
+
+  useEffect(() => {
+    if (storedCount > 0) {
+      handleStepChange();
+    }
+  }, [storedCount]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -105,15 +101,6 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
   const handleStepChange = () => {
     setStep(2);
   }
-  
-  useEffect(() => {
-    if (cookies.userData) {
-      // handleStepChange();
-      // setSelectedValue(cookies.userData.petCount);
-      // setEmailSent(true);
-      console.log(cookies.userData);
-    }
-  }, []);
 
   const form = useRef();
 
@@ -130,9 +117,8 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
       .then(
         (result) => {
           console.log(result.text);
-          setEmailSent(true);
-          handleStepChange();
-          setCookie("userData", { petCount: form.current });
+          setStoredCount(amount);
+          handleStepChange();          
         },
         (error) => {
           console.log(error.text);
@@ -219,7 +205,7 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
               type="submit"
               variant="contained"
               size="large"
-              disabled={amount === 0}
+              disabled={amount === 1}
               sx={{ mt: 3 }}
             >
               Reserve Your Spot
@@ -303,17 +289,7 @@ function ConfirmTransferDialog({
   const petWord = amount === 1 ? "pet" : "pets";
   const petVerb = amount === 1 ? "has" : "have";
   const petPronoun = amount === 1 ? "its" : "their";
-  const [cookies, setCookie, removeCookie] = useCookies(["userData"]);
-
-
-  useEffect(() => {
-    if (cookies.userData) {
-      // setSelectedValue(cookies.userData.petCount);
-      // setEmailSent(true);
-      console.log(cookies.userData);
-    }
-  }, []);
-
+  const petCount = localStorage.getItem('petCount');
 
   return (
       <>
@@ -324,7 +300,7 @@ function ConfirmTransferDialog({
             fontWeight: "400",
             textAlign: "center",
             color: "#343A40",
-          }}>Your <Typography component="span" sx={{ color: "#2C4CFF" }}>{amount}</Typography> {petWord} {petVerb} reserved {petPronoun} spot.</Typography>
+          }}>Your <Typography component="span" sx={{ color: "#2C4CFF" }}>{petCount}</Typography> {petWord} {petVerb} reserved {petPronoun} spot.</Typography>
         </Stack>
         <Stack direction="row" alignItems="center" justifyContent="center" >
           <Box sx={{
