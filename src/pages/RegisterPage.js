@@ -1,5 +1,4 @@
 import { useNavigate, Link } from 'react-router-dom';
-
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -10,7 +9,7 @@ import useResponsive from '../hooks/useResponsive';
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
-import { LoginForm } from '../sections/auth/login';
+import { RegisterForm } from '../sections/auth/login';
 
 // ----------------------------------------------------------------------
 
@@ -43,14 +42,13 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
-  const navigate = useNavigate();
+export default function RegisterPage() {
   const mdUp = useResponsive('up', 'md');
 
   return (
     <>
       <Helmet>
-        <title> Login | Petastic </title>
+        <title> Register | Petastic </title>
       </Helmet>
 
       <StyledRoot>
@@ -59,13 +57,13 @@ export default function LoginPage() {
               <Logo />
             </Box>
             <Typography variant="h4" gutterBottom>
-              Sign in
+              Get started absolutely free.
             </Typography>
             <Typography variant="body2" sx={{ mb: 5 }}>
-              Don’t have an account? {''}
-              <Link to="/register" variant="subtitle2">Get started</Link>
+              Already have an account? {''}
+              <Link to="/login" variant="subtitle2">Sign in</Link>
             </Typography>
-            <LoginForm />
+            <RegisterForm />
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 OR
@@ -86,7 +84,7 @@ export default function LoginPage() {
             </Stack>
             {!mdUp && (
               <Typography  variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+              Hi, LFG
               </Typography>
             )}
           </StyledSection>
@@ -94,7 +92,7 @@ export default function LoginPage() {
          {mdUp && (<Container maxWidth="sm">
           <StyledContent>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
+              Hi, LFG
             </Typography>
           </StyledContent>
         </Container>)}

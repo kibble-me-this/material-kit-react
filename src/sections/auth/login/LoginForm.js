@@ -17,10 +17,6 @@ export default function LoginForm() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleClick = () => {
-    navigate('/dashboard', { replace: true });
-  };
-
   const loginWithEmail = useCallback(async () => {
     setIsLoggingIn(true);
 
