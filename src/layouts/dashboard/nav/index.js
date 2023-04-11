@@ -15,6 +15,9 @@ import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
 
+import useLocalStorage from '../../../hooks/useLocalStorage';
+
+
 // ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
@@ -36,6 +39,9 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
+  const firstName = localStorage.getItem('firstName');
+  const lastName = localStorage.getItem('lastName');
+
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -64,7 +70,8 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {JSON.parse(firstName)} {JSON.parse(lastName)}
+
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>

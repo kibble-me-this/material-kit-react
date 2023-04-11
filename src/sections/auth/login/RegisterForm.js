@@ -5,6 +5,9 @@ import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox } from '@m
 import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/iconify';
 import { magic } from "../../../magic";
+import useLocalStorage from '../../../hooks/useLocalStorage';
+
+
 
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -13,6 +16,8 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [storedFirstName, setStoredFirstName] = useLocalStorage('firstName', "First");
+  const [storedLastName, setStoredLastName] = useLocalStorage('lastName', "Last");
 
   const methods = useForm({
     defaultValues: {
@@ -40,6 +45,14 @@ export default function RegisterForm() {
     setEmail(event.target.value);
   }, []);
 
+  const handleFirstNameInputOnChange = useCallback((event) => {
+    setStoredFirstName(event.target.value);
+  }, []);
+
+  const handleLastNameInputOnChange = useCallback((event) => {
+    setStoredLastName(event.target.value);
+  }, []);
+
   const onSubmit = (data) => {
     setEmail(data.email);
     loginWithEmail();
@@ -50,8 +63,8 @@ export default function RegisterForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3}>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField name="firstName" label="First name" required error={!!errors.firstName} helperText={errors.firstName ? "First name is required" : ""} />
-            <TextField name="lastName" label="Last name" required error={!!errors.lastName} helperText={errors.lastName ? "Last name is required" : ""} />
+            <TextField name="firstName" label="First name" onChange={handleFirstNameInputOnChange} required error={!!errors.firstName} helperText={errors.firstName ? "First name is required" : ""} />
+            <TextField name="lastName" label="Last name" onChange={handleLastNameInputOnChange} required error={!!errors.lastName} helperText={errors.lastName ? "Last name is required" : ""} />
           </Stack>
 
           <TextField
@@ -67,7 +80,7 @@ export default function RegisterForm() {
             helperText={errors.email ? "Email is required" : ""}
           />
           
-          <LoadingButton fullWidth size="large" type="submit" onClick={loginWithEmail} loading={isLoggingIn} disabled={isLoggingIn} variant="contained">
+          <LoadingButton fullWidth size="large" type="submit" loading={isLoggingIn} disabled={isLoggingIn} variant="contained">
             Login
           </LoadingButton>
         </Stack>

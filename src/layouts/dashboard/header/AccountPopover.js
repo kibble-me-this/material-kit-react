@@ -8,6 +8,9 @@ import account from '../../../_mock/account';
 // components
 import { magic } from "../../../magic";
 
+import useLocalStorage from '../../../hooks/useLocalStorage';
+
+
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -30,6 +33,9 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
   const [userMetadata, setUserMetadata] = useState();
+  const firstName = localStorage.getItem('firstName');
+  const lastName = localStorage.getItem('lastName');
+
   const navigate = useNavigate();
 
   const handleOpen = (event) => {
@@ -104,7 +110,7 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+          {JSON.parse(firstName)} {JSON.parse(lastName)}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {account.email}
