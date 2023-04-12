@@ -26,13 +26,31 @@ ShopProductCard.propTypes = {
 
 export default function ShopProductCard({ product }) {
   // const { name, cover, price, colors, status, priceSale } = product;
-  const { pet_passport_id, owner_id, metadata: { title, _description, media } } = product;
-  
-  const description = {
-    "species": "dog",
-    "breed": "Miniature American Shepherd",
-    "life-stage": "adult"
+  // const { pet_passport_id, owner_id, metadata: { title, _description, media } } = product;
+
+  const data = {
+    "pet_passport_id": "2ed23244b32ae571885d8a98da9fbc8b23b64392109298275504cc68857a0868-Cyber Dog",
+    "metadata": {
+      "title": "Cyber Dog",
+      "description": "{\"species\": \"Dog\", \"breed\": \"Sheperd\", \"life-stage\": \"adult\"}",
+      "media": "https://ipfs.io/ipfs/Qmf3uctAUYBg56fcLxDr3Updda5F76bWaW1t7hfPfWtgz5"
+    },
+    "pet_owner_id": "2ed23244b32ae571885d8a98da9fbc8b23b64392109298275504cc68857a0868"
   };
+
+  const data2 ={
+    "pet_passport_id": "2ed23244b32ae571885d8a98da9fbc8b23b64392109298275504cc68857a0868-Gigi9998",
+    "metadata": {
+      "title": "Gigi9998",
+      "description": "{\"species\": \"Dog\", \"breed\": \"Shih Tzu\", \"life-stage\": \"puppy\"}",
+      "media": "https://ipfs.io/ipfs/QmTd9qqHLzTZmRXSkoDFvT3TcjTMyJWv19nhUh1JhGgHkg"
+    },
+    "pet_owner_id": "2ed23244b32ae571885d8a98da9fbc8b23b64392109298275504cc68857a0868"
+  }
+
+  const { pet_passport_id, metadata, pet_owner_id } = product;
+  const { title, description, media } = metadata;
+  const { species, breed, "life-stage": lifeStage } = JSON.parse(description);
 
 
 
@@ -51,7 +69,7 @@ export default function ShopProductCard({ product }) {
               textTransform: 'uppercase',
             }}
           >
-            {description.species}
+            {species}
           </Label>
         )}
         <StyledProductImg alt={title} src={media} />
@@ -62,7 +80,7 @@ export default function ShopProductCard({ product }) {
         </Typography>
       </Link>
       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        {description.breed}
+        {breed}
       </Typography>
 
       <Divider sx={{ borderStyle: 'dashed' }} />
@@ -70,24 +88,24 @@ export default function ShopProductCard({ product }) {
       <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" sx={{ py: 3 }}>
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Follower
+            Gender
           </Typography>
-          <Typography variant="subtitle1">{"5555"}</Typography>
+          <Typography variant="caption">{"[M|F]"}</Typography>
         </div>
 
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Following
+            Life Stage
           </Typography>
 
-          <Typography variant="subtitle1">{"5555"}</Typography>
+          <Typography variant="caption">{lifeStage}</Typography>
         </div>
 
         <div>
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Balance 
+            Rewards 
           </Typography>
-          <Typography variant="subtitle1">
+          <Typography variant="caption">
             {fCurrency("1")}
           </Typography>
         </div>

@@ -200,7 +200,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     const {
       petName,
       petType,
-      selectedBreed,
       avatarUrl,
       petLifeStage
     } = data;
@@ -418,7 +417,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                       value={searchTerm}
                       fullWidth
                       disabled={!petType}
-                      helperText={petType ? `Enter multiple breeds for mixed pets` : 'Choose cat or dog first'}
+                      // helperText={petType ? `Enter multiple breeds for mixed pets` : 'Choose cat or dog first'}
                   />
                 )}
                 disabled={!petType}
@@ -431,10 +430,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Create Pet' : 'Save Changes'}
               </LoadingButton>
-              {txHash && <a href={`https://explorer.testnet.near.org/transactions/${txHash}`} target="_blank" rel="noreferrer">
-                View on Near
-              </a>
-              }
             </Stack>
           </Card>
         </Grid>

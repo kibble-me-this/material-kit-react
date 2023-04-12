@@ -109,10 +109,12 @@ export default function DashboardAppPage() {
 }
 
 const handleFetchBalance = async (account_id) => {
-const account = await near.account(account_id);
-account.getAccountBalance().then(bal => {
-  setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
-});
+  const account = await near.account(account_id);
+  account.getAccountBalance().then(bal => {
+    setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
+    if(bal.total) 
+      navigate('/dashboard/pets', { replace: true });
+  });
 }
 
 const isEmptyCart = !petCount;
