@@ -118,7 +118,7 @@ export default function ProductsPage() {
           <Typography variant="h4" gutterBottom>
           My Pets
           </Typography>
-           {isEmptyCart &&
+           {(petCount>0) &&
            <Link to="/dashboard/blank">
             <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
               New Pet
@@ -144,8 +144,8 @@ export default function ProductsPage() {
           <ProductList pets={userPets} />
         ) : (
           <EmptyContent
-            title="Hello there."
-            description="No pets yet."
+            title="Welcome to the future of pet care."
+            description="Let's add your furry friends."
             isEmptyWallet={isEmptyWallet}
           />          
         )}

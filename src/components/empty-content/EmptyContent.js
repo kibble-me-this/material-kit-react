@@ -8,7 +8,7 @@ import { Typography, Stack, Card, Button } from '@mui/material';
 //
 import Iconify from '../iconify';
 import Image from '../image';
-import EmptyImage from '../../assets/illustrations/BookingIllustration';
+import EmptyImage from '../../assets/illustrations/WelcomeDogIllustration';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ export default function EmptyContent({ title, description, isEmptyWallet, sx, ..
       <EmptyImage
         disabledEffect
         alt="empty content"
-        src={'/assets/illustrations/illustration_empty_content.svg'}
+        src={'/assets/illustrations/welsome_dog.svg'}
         sx={{ height: 240, mb: 3 }}
       />
 
@@ -48,14 +48,16 @@ export default function EmptyContent({ title, description, isEmptyWallet, sx, ..
       </Typography>
 
       {description && (
-        <><Typography variant="body2" sx={{acolor: 'text.secondary' }}>
+        <>
+          <Typography variant="body2" sx={{acolor: 'text.secondary' }}>
             {description}
           </Typography>
-          <Link to="/dashboard/blank"  underline="none">
-            <Button  disabled={Boolean(isEmptyWallet)} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-              New Pets
+          <Link to="/dashboard/blank" sx={{ textDecoration: 'none', color: 'inherit' }}>
+            <Button  disabled={Boolean(isEmptyWallet)} variant="contained" sx={{ textDecoration: 'none', mt:"15px" }}>
+              Add Pets
             </Button>
-          </Link></>
+          </Link>
+        </>
       )}
     </Stack>
     </Card>

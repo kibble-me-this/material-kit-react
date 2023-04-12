@@ -37,6 +37,7 @@ export default function Button(theme) {
           '&:hover': {
             backgroundColor: theme.palette.action.hover,
           },
+          textDecoration: 'none' // disable text underline
         },
       },
     },
