@@ -66,11 +66,6 @@ export default function LoginPage() {
               <Link to="/register" variant="subtitle2">Get started</Link>
             </Typography>
             <LoginForm />
-            {!mdUp && (
-              <Typography  variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
-              </Typography>
-            )}
           </StyledSection>
         
          {mdUp && (<Container maxWidth="sm">
@@ -79,7 +74,7 @@ export default function LoginPage() {
               Hi, Welcome Back
             </Typography>
             <Typography variant="h4" sx={{ px: 5, mt: 10, mb: 5 }}>
-              [fancy illustration here]
+              [WIP - fancy illustration here]
             </Typography>  
           </StyledContent>
         </Container>)}

@@ -64,11 +64,6 @@ export default function RegisterPage() {
               <Link to="/login" variant="subtitle2">Sign in</Link>
             </Typography>
             <RegisterForm />
-            {!mdUp && (
-              <Typography  variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, LFG
-              </Typography>
-            )}
           </StyledSection>
         
          {mdUp && (<Container maxWidth="sm">
@@ -77,7 +72,7 @@ export default function RegisterPage() {
               Hi, LFG
             </Typography>
             <Typography variant="h4" sx={{ px: 5, mt: 10, mb: 5 }}>
-              [fancy illustration here]
+              [WIP - fancy illustration here]
             </Typography>
           </StyledContent>
         </Container>)}
