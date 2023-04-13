@@ -64,24 +64,6 @@ export default function RegisterPage() {
               <Link to="/login" variant="subtitle2">Sign in</Link>
             </Typography>
             <RegisterForm />
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                OR
-              </Typography>
-            </Divider>
-            <Stack direction="row" spacing={2}>
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
-              </Button>
-
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
-              </Button>
-
-              <Button fullWidth size="large" color="inherit" variant="outlined">
-                <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
-              </Button>
-            </Stack>
             {!mdUp && (
               <Typography  variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, LFG
@@ -93,6 +75,9 @@ export default function RegisterPage() {
           <StyledContent>
           <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               Hi, LFG
+            </Typography>
+            <Typography variant="h4" sx={{ px: 5, mt: 10, mb: 5 }}>
+              [fancy illustration here]
             </Typography>
           </StyledContent>
         </Container>)}
