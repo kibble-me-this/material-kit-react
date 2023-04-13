@@ -293,7 +293,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
-          <Card sx={{ pt: 10, pb: 5, px: 3 }}>
+          <Card sx={{ pt: 10, pb: 5, px: 3, minWidth: 400 }}>
             {isEdit && (
               <Label
                 color={values.status === 'active' ? 'success' : 'error'}

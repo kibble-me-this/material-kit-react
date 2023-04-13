@@ -5,13 +5,16 @@ import * as nearAPI from "near-api-js";
 
 
 // @mui
-import { Container, Stack, Typography, Button, Box } from '@mui/material';
+import { Container, Stack, Typography, Button, Box, Modal, Grid } from '@mui/material';
 // components
 import { magic } from "../magic";
 import Loading from "./Loading";
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 import Iconify from '../components/iconify';
 import EmptyContent from '../components/empty-content';
+
+import UserNewEditForm from '../sections/@dashboard/user/UserNewEditForm';
+
 // mock
 // import PRODUCTS from '../_mock/products';
 
@@ -106,24 +109,46 @@ export default function ProductsPage() {
  const isEmptyCart = !petCount;
  const isEmptyWallet = !nearBalance;
 
+ const [open, setOpen] = useState(false);
+
+ const handleOpen = () => {
+   setOpen(true);
+ };
+
+ const handleClose = () => {
+   setOpen(false);
+ };
+
   return userMetadata ?
     <>
       <Helmet>
         <title> Pets | Petastic </title>
       </Helmet>
+      
+
+      <Modal open={open} 
+        onClose={handleClose} 
+        BackdropProps={{style: {ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'}}}
+        >
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
+          <Container>
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', minWidth: '50vw' }}>
+              <UserNewEditForm sx={{ alignItems: 'center', justifyContent: 'center' }} />
+            </Box>
+          </Container>
+        </Box>
+      </Modal>
+
 
       <Container>
-     
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
           My Pets
           </Typography>
            {(petCount>0) &&
-           <Link to="/dashboard/blank">
-            <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            <Button onClick={handleOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
               New Pet
             </Button>
-          </Link>
           }
         </Stack>
       
