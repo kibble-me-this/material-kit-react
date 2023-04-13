@@ -57,7 +57,7 @@ const ipfs = create({
 
 
 
-export default function UserNewEditForm({ isEdit = false, currentUser }) {
+export default function UserNewEditForm({ handleClose, isEdit = false, currentUser }) {
   const networkId = "testnet"; // testnet, betanet, or mainnet
   const contractName = "ilovepets-m2.testnet";
   const autocompleteRef = useRef(null);
@@ -268,6 +268,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       // setImage(data.avatarUrl.files[0]);
       await handleCreatePassport(data);
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+      handleClose(); // modal callback
       navigate("/dashboard/pets");
     } catch (error) {
       console.error(error);
@@ -428,7 +429,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 />
 
               <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Create Pet' : 'Save Changes'}
+                {!isEdit ? 'Create Pet Passport' : 'Save Changes'}
               </LoadingButton>
             </Stack>
           </Card>

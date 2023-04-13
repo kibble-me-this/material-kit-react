@@ -117,6 +117,7 @@ export default function ProductsPage() {
 
  const handleClose = () => {
    setOpen(false);
+   handleFetchPassports(userMetadata.publicAddress); 
  };
 
   return userMetadata ?
@@ -133,7 +134,7 @@ export default function ProductsPage() {
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
           <Container>
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', minWidth: '50vw' }}>
-              <UserNewEditForm sx={{ alignItems: 'center', justifyContent: 'center' }} />
+          <UserNewEditForm handleClose={handleClose} sx={{ alignItems: 'center', justifyContent: 'center' }} />
             </Box>
           </Container>
         </Box>
