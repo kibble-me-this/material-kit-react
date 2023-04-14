@@ -72,11 +72,19 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   const [sendingTransaction, setSendingTransaction] = useState(false);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  
   const [petType, setPetType] = useState('');
   const handlePetTypeChange = (event, newPetType) => {
     setPetType(newPetType);
     setValue('petType', newPetType);
   };
+
+  const [petGender, setPetGender] = useState('');
+  const handlePetGenderChange = (event, newPetGender) => {
+    setPetGender(newPetGender);
+    setValue('petGender', newPetGender);
+  };
+
   const [puppy_kitten, setPuppyKitten] = useState('BABY');   
   const [petLifeStage, setPetLifeStage] = useState('');
   const handleChangeLifeStage = (event, newLifeStage) => {
@@ -95,6 +103,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
     petType: Yup.string().required('Pet type is required'),
+    petGender: Yup.string().required('Pet gender is required'),
     avatarUrl: Yup.mixed().required('Avatar is required'),
     // selectedBreed: Yup.array().min(1, 'Must have at least 1 tags'),
   });
@@ -103,6 +112,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
     () => ({
       petName: currentUser?.name || '',
       petType: currentUser?.petType || null,
+      petGender: currentUser?.petType || null,
       avatarUrl: currentUser?.avatarUrl || null,
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
@@ -207,6 +217,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
     const {
       petName,
       petType,
+      petGender,
       avatarUrl,
       petLifeStage
     } = data;
@@ -239,7 +250,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
         pet_passport_id: `${userMetadata.publicAddress}-${petName}`,
         metadata: {
           title: data.petName,
-          description: `{"species": "${petType}", "gender": "WIP", "breed": "${selectedBreed}", "life-stage": "${petLifeStage}"}`,
+          description: `{"species": "${petType}", "gender": "${petGender}", "breed": "${selectedBreed}", "life-stage": "${petLifeStage}"}`,
           media: imageUrl,
         },
         pet_owner_id: userMetadata.publicAddress,
@@ -388,6 +399,19 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
               >
                 <ToggleButton sx={{ fontWeight: 400 }} value="Dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
                 <ToggleButton sx={{ fontWeight: 400 }} value="Cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
+              </ToggleButtonGroup>
+
+              <ToggleButtonGroup
+                fullWidth
+                name="petGender"
+                color="primary"
+                exclusive
+                value={petGender}
+                onChange={handlePetGenderChange}
+                control={control}
+              >
+                <ToggleButton sx={{ fontWeight: 400 }} value="Male" >MALE</ToggleButton>
+                <ToggleButton sx={{ fontWeight: 400 }} value="Female" >FEMALE</ToggleButton>
               </ToggleButtonGroup>
 
 

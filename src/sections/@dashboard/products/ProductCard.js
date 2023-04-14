@@ -69,7 +69,7 @@ export default function ShopProductCard({ product }) {
               textTransform: 'uppercase',
             }}
           >
-            [WIP]
+            Snout Check: i'm a {species}
           </Label>
         )}
         <StyledProductImg alt={title} src={media} />
@@ -90,7 +90,7 @@ export default function ShopProductCard({ product }) {
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
             Gender
           </Typography>
-          <Typography variant="caption">[{gender}]</Typography>
+          <Typography variant="caption">{gender}</Typography>
         </div>
 
         <div>
