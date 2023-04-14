@@ -16,6 +16,7 @@ import { RegisterForm } from '../sections/auth/login';
 const StyledRoot = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
+    background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'
   },
 }));
 
