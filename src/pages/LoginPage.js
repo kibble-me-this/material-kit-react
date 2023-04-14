@@ -24,7 +24,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
 
 const StyledSection = styled('div')(({ theme }) => ({
   width: '100%',
-  height: '100vh', // <-- add this line
+  height: '100vh',
   maxWidth: 480,
   display: 'flex',
   flexDirection: 'column',
