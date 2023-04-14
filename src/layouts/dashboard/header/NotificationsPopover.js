@@ -36,7 +36,7 @@ const NOTIFICATIONS = [
     avatar: null,
     type: 'order_placed',
     createdAt: set(new Date(), { hours: 10, minutes: 30 }),
-    isUnRead: true,
+    isUnRead: false,
   },
   {
     id: faker.datatype.uuid(),
@@ -45,7 +45,7 @@ const NOTIFICATIONS = [
     avatar: '/assets/images/avatars/avatar_2.jpg',
     type: 'friend_interactive',
     createdAt: sub(new Date(), { hours: 3, minutes: 30 }),
-    isUnRead: true,
+    isUnRead: false,
   },
   {
     id: faker.datatype.uuid(),

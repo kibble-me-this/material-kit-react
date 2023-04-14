@@ -4,11 +4,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @mui
 
-import { Typography, Stack, Card, Button } from '@mui/material';
+import { Typography, Stack, Card, Button, Modal, Box, Container } from '@mui/material';
 //
 import Iconify from '../iconify';
 import Image from '../image';
 import EmptyImage from '../../assets/illustrations/WelcomeDogIllustration';
+import UserNewEditForm from '../../sections/@dashboard/user/UserNewEditForm';
+
+
+
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +23,14 @@ EmptyContent.propTypes = {
   description: PropTypes.string,
 };
 
-export default function EmptyContent({ title, description, isEmptyWallet, sx, ...other }) {
+export default function EmptyContent({ title, description, isEmptyWallet, handleClose, sx, ...other }) {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  
   const navigate = useNavigate();
 
   return (
@@ -52,11 +63,21 @@ export default function EmptyContent({ title, description, isEmptyWallet, sx, ..
           <Typography variant="body2" sx={{acolor: 'text.secondary' }}>
             {description}
           </Typography>
-          <Link to="/dashboard/blank" sx={{ textDecoration: 'none', color: 'inherit' }}>
-            <Button  disabled={Boolean(isEmptyWallet)} variant="contained" sx={{ textDecoration: 'none', mt:"15px" }}>
-              Add Pets
-            </Button>
-          </Link>
+          <Modal open={open} 
+            onClose={handleClose} 
+            BackdropProps={{style: {ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'}}}
+            >
+            <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
+              <Container>
+              <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh', minWidth: '50vw' }}>
+              <UserNewEditForm handleClose={handleClose} sx={{ alignItems: 'center', justifyContent: 'center' }} />
+                </Box>
+              </Container>
+            </Box>
+          </Modal>
+          <Button onClick={handleOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+              New Pet
+          </Button>
         </>
       )}
     </Stack>

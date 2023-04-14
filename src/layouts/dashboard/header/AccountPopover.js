@@ -112,9 +112,6 @@ export default function AccountPopover() {
           <Typography variant="subtitle2" noWrap>
             {JSON.parse(firstName)} {JSON.parse(lastName)}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
-          </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />

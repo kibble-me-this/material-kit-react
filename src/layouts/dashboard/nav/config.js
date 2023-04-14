@@ -40,6 +40,18 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
+    title: 'Food',
+    path: '/dashboard/membership',
+    icon: icon('ic_invoice'),
+    disabled: true,
+  },
+  {
+    title: 'Insurance',
+    path: '/dashboard/membership',
+    icon: icon('ic_file'),
+    disabled: true,
+  },
+  {
     title: 'Rewards',
     path: '/dashboard/rewards',
     icon: icon('ic_cart'),

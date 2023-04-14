@@ -15,6 +15,9 @@ import EmptyContent from '../components/empty-content';
 
 import UserNewEditForm from '../sections/@dashboard/user/UserNewEditForm';
 
+import useLocalStorage from '../hooks/useLocalStorage';
+
+
 // mock
 // import PRODUCTS from '../_mock/products';
 
@@ -31,6 +34,8 @@ export default function ProductsPage() {
   const [userPets, setUserPets] = useState([]);
   const navigate = useNavigate();
   const networkId = "testnet"; // testnet, betanet, or mainnet
+  const storedLastTx = localStorage.getItem('txHash');
+
 
   const handleOpenFilter = () => {
     setOpenFilter(true);
@@ -155,16 +160,27 @@ export default function ProductsPage() {
       
         <Box borderBottom="1px solid #CED4DA" width="100%" mt={1} />
 
-        <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <ProductFilterSidebar
-              openFilter={openFilter}
-              onOpenFilter={handleOpenFilter}
-              onCloseFilter={handleCloseFilter}
-            />
-            <ProductSort />
-          </Stack>
+        <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
+        <Box sx={{ flexGrow: 1 }}>
+        {storedLastTx && (
+          <Link 
+            to={`https://explorer.testnet.near.org/transactions/${JSON.parse(storedLastTx)}`} 
+            target="_blank"
+          >
+            TESTING - Latest passport on NEAR
+          </Link>
+        )}
+        </Box>
+        <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+          <ProductFilterSidebar
+            openFilter={openFilter}
+            onOpenFilter={handleOpenFilter}
+            onCloseFilter={handleCloseFilter}
+          />
+          <ProductSort />
         </Stack>
+      </Stack>
+
         
         {!isEmptyCart ? (
           <ProductList pets={userPets} />
@@ -173,6 +189,7 @@ export default function ProductsPage() {
             title="Welcome to the future of pet care."
             description="Let's add your furry friends."
             isEmptyWallet={isEmptyWallet}
+            handleClose={handleClose}
           />          
         )}
 

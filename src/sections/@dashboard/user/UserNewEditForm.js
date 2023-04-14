@@ -33,6 +33,9 @@ import FormProvider, {
   RHFAutocomplete
 } from '../../../components/hook-form';
 
+import useLocalStorage from '../../../hooks/useLocalStorage';
+
+
 // ----------------------------------------------------------------------
 
 UserNewEditForm.propTypes = {
@@ -64,6 +67,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   const [loading, setLoading] = useState(false);
   const [userMetadata, setUserMetadata] = useState();
   const [v1URL, setv1URL] = useState({});
+  const [storedLastTx, setStoredLastTx] = useLocalStorage('txHash', "");
   const [txHash, setTxHash] = useState("");
   const [sendingTransaction, setSendingTransaction] = useState(false);
   const navigate = useNavigate();
@@ -84,6 +88,9 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   const [responseText, setResponseText] = useState('');
   const [selectedBreed, setSelectedBreed] = useState([]);
   const [loadingBreeds, setLoadingBreeds] = useState(false);
+
+
+  
 
   const NewUserSchema = Yup.object().shape({
     petName: Yup.string().required('Pet name is required'),
@@ -232,7 +239,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
         pet_passport_id: `${userMetadata.publicAddress}-${petName}`,
         metadata: {
           title: data.petName,
-          description: `{"species": "${petType}", "breed": "${selectedBreed}", "life-stage": "${petLifeStage}"}`,
+          description: `{"species": "${petType}", "gender": "WIP", "breed": "${selectedBreed}", "life-stage": "${petLifeStage}"}`,
           media: imageUrl,
         },
         pet_owner_id: userMetadata.publicAddress,
@@ -260,13 +267,15 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
     const signedTransaction = nearAPI.transactions.SignedTransaction.decode(Buffer.from(result.encodedSignedTransaction));
     const receipt = await near.connection.provider.sendTransaction(signedTransaction);
     console.log(receipt);
-    setTxHash(receipt.transaction.hash); 
+    setStoredLastTx(receipt.transaction.hash);
+    // return receipt.transaction.hash;
   };
   
   const onSubmit = async (data) => {
     try {
       // setImage(data.avatarUrl.files[0]);
       await handleCreatePassport(data);
+      // setStoredLastTx(txHash);
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
       handleClose(); // modal callback
       navigate("/dashboard/pets");
@@ -291,6 +300,12 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   );
 
   return (
+    <Stack spacing={3}>
+            <Typography sx={{
+              fontSize: "24px",
+              fontWeight: "700",
+              textAlign: "center"
+            }}>One furball at a time.</Typography>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
@@ -436,5 +451,6 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
         </Grid>
       </Grid>
     </FormProvider>
+    </Stack>
   );
 }

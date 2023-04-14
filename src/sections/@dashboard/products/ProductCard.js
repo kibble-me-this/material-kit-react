@@ -50,7 +50,7 @@ export default function ShopProductCard({ product }) {
 
   const { pet_passport_id, metadata, pet_owner_id } = product;
   const { title, description, media } = metadata;
-  const { species, breed, "life-stage": lifeStage } = JSON.parse(description);
+  const { species, gender, breed, "life-stage": lifeStage } = JSON.parse(description);
 
 
 
@@ -69,17 +69,17 @@ export default function ShopProductCard({ product }) {
               textTransform: 'uppercase',
             }}
           >
-            {species}
+            [WIP]
           </Label>
         )}
         <StyledProductImg alt={title} src={media} />
       </Box>
       <Link color="inherit" underline="hover">
-        <Typography variant="subtitle1" sx={{ mt: 6, mb: 0.5 }}>
+        <Typography variant="subtitle1" sx={{ mt: 2, mb: 0.5 }}>
           {title}
         </Typography>
       </Link>
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
         {breed}
       </Typography>
 
@@ -90,7 +90,7 @@ export default function ShopProductCard({ product }) {
           <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
             Gender
           </Typography>
-          <Typography variant="caption">{"[M|F]"}</Typography>
+          <Typography variant="caption">[{gender}]</Typography>
         </div>
 
         <div>
@@ -106,20 +106,11 @@ export default function ShopProductCard({ product }) {
             Rewards 
           </Typography>
           <Typography variant="caption">
-            {fCurrency("1")}
+            50 KBL
           </Typography>
         </div>
       </Box>
 
-      <Stack spacing={2} sx={{ p: 3 }}>
-
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={["blue"]} />
-          <Typography variant="subtitle1">
-            {fCurrency("1")}
-          </Typography>
-        </Stack>
-      </Stack>
     </Card>
   );
 }
