@@ -12,7 +12,7 @@ import Image from '../components/image';
 import Iconify from '../components/iconify';
 // sections
 import { RegisterForm } from '../sections/auth/login';
-import illustration from '../assets/images/Pet-Passport.svg'
+import illustration from '../assets/images/pet-passport.svg'
 
 
 // ----------------------------------------------------------------------
@@ -32,12 +32,12 @@ const StyledSection = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   boxShadow: theme.customShadows.card,
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%)',
   padding: '40px',
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
-  maxWidth: 500,
+  maxWidth: 550,
   margin: 'auto',
   minHeight: '100vh',
   display: 'flex',
@@ -59,24 +59,22 @@ export default function RegisterPage() {
 
       <StyledRoot>
           <StyledSection>
-            <Box sx={{ display: 'inline-flex' }}>
+            <Box sx={{ display: 'inline-flex', mb: 10 }}>
               <Logo />
             </Box>
-            <Typography variant="h4" gutterBottom>
-              Get started absolutely free.
+            <Typography variant="h4" sx={{ mb: 4 }} gutterBottom>
+              Sign up for Petastic
             </Typography>
-            <Typography variant="body2" sx={{ mb: 5 }}>
+
+            <RegisterForm />
+            <Typography variant="body2" sx={{ mt: 2 }}>
               Already have an account? {''}
               <Link to="/login" variant="subtitle2">Sign in</Link>
             </Typography>
-            <RegisterForm />
           </StyledSection>
         
          {mdUp && (<Container maxWidth="sm">
           <StyledContent>
-          <Typography variant="h3" sx={{ px: 2, mt: 10, mb: 5 }}>
-            One place for everything pet.   
-            </Typography>
             <Image
               disabledEffect
               visibleByDefault

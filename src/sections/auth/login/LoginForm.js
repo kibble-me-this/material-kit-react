@@ -49,20 +49,6 @@ export default function LoginForm() {
       <LoadingButton fullWidth size="large" onClick={loginWithEmail} loading={isLoggingIn} disabled={isLoggingIn} variant="contained">
         Log in
       </LoadingButton>
-      <Typography variant="h4" sx={{ px: 5, mt: 10, mb: 5 }}>
-      [WIP - wallet auth benefits]
-      <List sx={{ '& li': { listStyle: 'disc inside none' } }}>
-        <ListItem>
-          <ListItemText primary="User-friendly Web3" />
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Magic link key management" />
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Passwordless registration" />
-        </ListItem>
-      </List>
-      </Typography>
       </Stack>
 
     </>

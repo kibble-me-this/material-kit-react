@@ -9,8 +9,12 @@ import useResponsive from '../hooks/useResponsive';
 // components
 import Logo from '../components/logo';
 import Iconify from '../components/iconify';
+import Image from '../components/image';
+
 // sections
 import { LoginForm } from '../sections/auth/login';
+import illustration from '../assets/images/dog-passport.svg'
+
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +33,7 @@ const StyledSection = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   boxShadow: theme.customShadows.card,
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%)',
   padding: '40px',
 }));
 
@@ -56,27 +60,29 @@ export default function LoginPage() {
 
       <StyledRoot>
           <StyledSection>
-            <Box sx={{ display: 'inline-flex' }}>
+            <Box sx={{ display: 'inline-flex', mb: 10 }}>
               <Logo />
             </Box>
             <Typography variant="h4" gutterBottom>
               Sign in
             </Typography>
-            <Typography variant="body2" sx={{ mb: 5 }}>
+
+            <LoginForm />
+            <Typography variant="body2" sx={{ mt: 2 }}>
               Don’t have an account? {''}
               <Link to="/register" variant="subtitle2">Get started</Link>
             </Typography>
-            <LoginForm />
           </StyledSection>
         
          {mdUp && (<Container maxWidth="sm">
           <StyledContent>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-              Hi, Welcome Back
-            </Typography>
-            <Typography variant="h4" sx={{ px: 5, mt: 10, mb: 5 }}>
-              [WIP - fancy illustration here]
-            </Typography>  
+            <Image
+              disabledEffect
+              visibleByDefault
+              alt="auth"
+              src={illustration || '/assets/illustrations/illustration_dashboard.png'}
+              sx={{ maxWidth: 720 }}
+            />  
           </StyledContent>
         </Container>)}
       </StyledRoot>
