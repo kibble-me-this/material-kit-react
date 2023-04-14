@@ -7,13 +7,10 @@ import { Container, Typography, Divider, Stack, Button, Box } from '@mui/materia
 import useResponsive from '../hooks/useResponsive';
 // components
 import Logo from '../components/logo';
-import Image from '../components/image';
 
 import Iconify from '../components/iconify';
 // sections
 import { RegisterForm } from '../sections/auth/login';
-import illustration from '../assets/images/pet-passport.svg'
-
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +29,7 @@ const StyledSection = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   boxShadow: theme.customShadows.card,
-  backgroundColor: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%)',
+  backgroundColor: theme.palette.background.default,
   padding: '40px',
 }));
 
@@ -75,13 +72,9 @@ export default function RegisterPage() {
         
          {mdUp && (<Container maxWidth="sm">
           <StyledContent>
-            <Image
-              disabledEffect
-              visibleByDefault
-              alt="auth"
-              src={illustration || '/assets/illustrations/illustration_dashboard.png'}
-              sx={{ maxWidth: 720 }}
-            />
+          <Typography variant="h3" sx={{ px: 2, mt: 10, mb: 5 }}>
+            One place for everything pet.   
+            </Typography>
           </StyledContent>
         </Container>)}
       </StyledRoot>
