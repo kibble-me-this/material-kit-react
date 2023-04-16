@@ -20,14 +20,17 @@ import useLocalStorage from '../../../hooks/useLocalStorage';
 
 // ----------------------------------------------------------------------
 
-const NAV_WIDTH = 280;
+const NAV_WIDTH = 300;
 
 const StyledAccount = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.background.alpha,
+  // backgroundColor: theme.palette.background.alpha,
+  // sx: {
+  //  background: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%)',
+  // },
 }));
 
 // ----------------------------------------------------------------------
@@ -104,7 +107,7 @@ export default function Nav({ openNav, onCloseNav }) {
           PaperProps={{
             sx: {
               width: NAV_WIDTH,
-              background: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%);',
+              background: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%)',
               // borderRightStyle: 'dashed',
               // background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)',
             },

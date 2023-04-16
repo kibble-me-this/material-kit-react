@@ -24,6 +24,8 @@ export function bgBlur(props) {
         backdropFilter: `blur(${blur}px)`,
         WebkitBackdropFilter: `blur(${blur}px)`,
         backgroundColor: alpha(color, opacity),
+        opacity: 0.8,
+        backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))',
       },
     };
   }
@@ -34,6 +36,8 @@ export function bgBlur(props) {
     backgroundColor: alpha(color, opacity),
   };
 }
+
+
 
 // ----------------------------------------------------------------------
 

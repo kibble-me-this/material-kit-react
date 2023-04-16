@@ -1,14 +1,20 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Card, Link, Typography, Stack, Divider } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { Box, Card, Link, Typography, Stack, Divider } from '@mui/material';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
+import { bgBlur } from '../../../utils/cssStyles';
+
 // components
 import Label from '../../../components/label';
 import { ColorPreview } from '../../../components/color-utils';
 
 // ----------------------------------------------------------------------
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  ...bgBlur({ color: theme.palette.background.pink }),
+}));
 
 const StyledProductImg = styled('img')({
   top: 0,
@@ -23,6 +29,8 @@ const StyledProductImg = styled('img')({
 ShopProductCard.propTypes = {
   product: PropTypes.object,
 };
+
+
 
 export default function ShopProductCard({ product }) {
   // const { name, cover, price, colors, status, priceSale } = product;
@@ -55,7 +63,7 @@ export default function ShopProductCard({ product }) {
 
 
   return (
-    <Card sx={{ textAlign: 'center' }}>
+    <StyledCard sx={{ textAlign: 'center' }}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
         {title && (
           <Label
@@ -111,6 +119,6 @@ export default function ShopProductCard({ product }) {
         </div>
       </Box>
 
-    </Card>
+    </StyledCard>
   );
 }
