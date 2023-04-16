@@ -15,6 +15,7 @@ const StyledRoot = styled('div')({
   display: 'flex',
   minHeight: '100%',
   overflow: 'hidden',
+  background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'
 });
 
 const Main = styled('div')(({ theme }) => ({

@@ -18,6 +18,8 @@ const GREY = {
 
 // SETUP COLORS
 const BLUE ='#EBEFFF';
+const PINK ='#FFEEEB';
+
 
 const PRIMARY = {
   lighter: '#D1E9FC',
@@ -89,15 +91,17 @@ const palette = {
     disabled: GREY[500],
   },
   background: {
-    paper: '#fff',
+    paper: '#FFF',
     default: GREY[100],
     neutral: GREY[200],
     blue: BLUE,
+    alpha: alpha(GREY[500], 0.08),
+    pink: PINK,
   },
   action: {
     active: GREY[600],
     hover: alpha(GREY[500], 0.08),
-    selected: BLUE,
+    selected: alpha(GREY[500], 0.08),
     disabled: alpha(GREY[500], 0.8),
     disabledBackground: alpha(GREY[500], 0.24),
     focus: alpha(GREY[500], 0.24),

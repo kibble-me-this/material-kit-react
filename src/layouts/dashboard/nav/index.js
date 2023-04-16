@@ -27,7 +27,7 @@ const StyledAccount = styled('div')(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.background.blue,
+  backgroundColor: theme.palette.background.alpha,
 }));
 
 // ----------------------------------------------------------------------
@@ -104,8 +104,9 @@ export default function Nav({ openNav, onCloseNav }) {
           PaperProps={{
             sx: {
               width: NAV_WIDTH,
-              bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
+              background: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.5) 3.51%, rgba(255, 255, 255, 0.2) 111.71%);',
+              // borderRightStyle: 'dashed',
+              // background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)',
             },
           }}
         >
