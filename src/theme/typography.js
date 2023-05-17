@@ -83,12 +83,26 @@ const typography = {
     fontSize: pxToRem(16),
   },
   body2: {
-    lineHeight: 22 / 14,
+    fontWeight: 700,
+    lineHeight: 1.5,
+    letterSpacing: '0.06em',
     fontSize: pxToRem(14),
+    color: '#868E96',
+  },
+  value: {
+    fontWeight: 600,
+    lineHeight: 1.5,
+    letterSpacing: '0.01em',
+    fontSize: pxToRem(12),
+    color: '#343A40',
+    textTransform: 'capitalize',
   },
   caption: {
+    fontWeight: 700,
     lineHeight: 1.5,
-    fontSize: pxToRem(12),
+    letterSpacing: '0.06em',
+    fontSize: pxToRem(10),
+    color: '#868E96',
   },
   overline: {
     fontWeight: 700,

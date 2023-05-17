@@ -71,4 +71,25 @@ const navConfig = [
   },
 ];
 
-export default navConfig;
+const navConfig2 = [
+  {
+    title: 'me',
+    path: '/dashboard/pets',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'Your Pet Wallet',
+    path: '/dashboard/membership',
+    icon: icon('ic_invoice'),
+    disabled: true,
+  },
+  {
+    title: 'Logout',
+    path: '/dashboard/membership',
+    icon: icon('ic_file'),
+    disabled: true,
+  },
+
+];
+
+export { navConfig, navConfig2 };

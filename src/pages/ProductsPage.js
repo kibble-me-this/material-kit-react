@@ -152,7 +152,7 @@ export default function ProductsPage() {
           My Pets
           </Typography>
            {(petCount>0) &&
-            <Button onClick={handleOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            <Button onClick={handleOpen} variant="contained">
               New Pet
             </Button>
           }
@@ -161,7 +161,7 @@ export default function ProductsPage() {
         <Box borderBottom="1px solid #CED4DA" width="100%" mt={1} />
 
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
-        <Box sx={{ flexGrow: 1 }}>
+        {/* <Box sx={{ flexGrow: 1 }}>
         {storedLastTx && (
           <Link 
             to={`https://explorer.testnet.near.org/transactions/${JSON.parse(storedLastTx)}`} 
@@ -171,14 +171,14 @@ export default function ProductsPage() {
           </Link>
         )}
         </Box>
-        <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+         <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
           <ProductFilterSidebar
             openFilter={openFilter}
             onOpenFilter={handleOpenFilter}
             onCloseFilter={handleCloseFilter}
           />
           <ProductSort />
-        </Stack>
+        </Stack> */}
       </Stack>
 
         

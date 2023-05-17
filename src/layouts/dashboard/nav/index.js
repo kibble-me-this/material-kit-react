@@ -13,7 +13,7 @@ import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
-import navConfig from './config';
+import { navConfig, navConfig2 } from './config';
 
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
@@ -69,7 +69,7 @@ export default function Nav({ openNav, onCloseNav }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
-            <Avatar src={account.photoURL} alt="photoURL" />
+           {/* <Avatar src={account.photoURL} alt="photoURL" /> */} 
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
@@ -88,6 +88,8 @@ export default function Nav({ openNav, onCloseNav }) {
       <NavSection data={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
+
+      <NavSection data={navConfig2} />
 
     </Scrollbar>
   );

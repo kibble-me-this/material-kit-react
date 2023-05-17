@@ -63,7 +63,7 @@ export default function Header({ onOpenNav }) {
         {/* <Searchbar /> */}
         <Box sx={{ flexGrow: 1 }} />
 
-        <Stack
+       {/* <Stack
           direction="row"
           alignItems="center"
           spacing={{
@@ -73,7 +73,7 @@ export default function Header({ onOpenNav }) {
         >
           <NotificationsPopover />
           <AccountPopover />
-        </Stack>
+        </Stack> */}
       </StyledToolbar>
     </StyledRoot>
   );

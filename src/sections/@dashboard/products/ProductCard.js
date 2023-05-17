@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Card, Link, Typography, Stack, Divider } from '@mui/material';
+import { Box, Card, Link, Typography, Stack, Divider, Button } from '@mui/material';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
 import { bgBlur } from '../../../utils/cssStyles';
@@ -20,6 +20,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
   transformStyle: 'preserve-3d',
   transition: 'transform 0.6s',
+  boxShadow: '0px 6px 20px rgba(0, 0, 0, 0.2)',
   '&.flipped': {
     transform: 'rotateY(180deg)',
   },
@@ -33,52 +34,11 @@ const StyledProductImg = styled('img')({
   position: 'absolute',
 });
 
-const styles = {
-  flipCard: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    backfaceVisibility: 'hidden',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    textAlign: 'center',
-    padding: 16,
-  },
-  flipCardFront: {
-    backgroundColor: '#bbb',
-    color: 'black',
-    zIndex: 2,
-  },
-  flipCardBack: {
-    backgroundColor: '#2980b9',
-    color: 'white',
-    transform: 'rotateY(180deg)',
-    zIndex: 1,
-  },
-};
-
 // ----------------------------------------------------------------------
 
 ShopProductCard.propTypes = {
   product: PropTypes.object,
 };
-
-function FrontCard() {
-  return (
-    <Box className={styles.flipCardFront}>
-      <Typography variant="subtitle2">Front Card</Typography>
-    </Box>
-  );
-}
-
-function BackCard() {
-  return (
-    <Box className={styles.flipCardBack}>
-      <Typography variant="subtitle2">Back Card</Typography>
-    </Box>
-  );
-}
 
 export default function ShopProductCard({ product }) {
   const data2 ={
@@ -95,80 +55,108 @@ export default function ShopProductCard({ product }) {
   const { title, description, media } = metadata;
   const { species, gender, breed, "life-stage": lifeStage } = JSON.parse(description);
 
-  const [flipped, setFlipped] = useState(false);
-
-  const handleFlip = () => {
-    setFlipped(!flipped);
-  };
-
-
   return (
     <StyledCard sx={{ textAlign: 'center' }}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
         {title && (
           <Label
-            variant="filled"
+            variant="caption"
             color={(title === 'sale' && 'error') || 'info'}
             sx={{
-              zIndex: 9,
-              top: 16,
-              right: 16,
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: '8px 12px',
+              gap: '8px',
               position: 'absolute',
-              textTransform: 'uppercase',
+              width: '78px',
+              height: '30px',
+              right: '16px',
+              top: '16px',
+              background: 'rgba(255, 255, 255, 0.8)',
+              border: '1px solid #CED4DA',
+              borderRadius: '8px',
+              zIndex: 9,
+              fontStyle: 'normal',
+              fontWeight: 600,
+              fontSize: '12px',
+              lineHeight: '14px',
+              textAlign: 'center',
+              letterSpacing: '0.01em',
+              color: '#343A40',
             }}
           >
-            Snout Check: i'm a {species}
+            1,000
           </Label>
-        )}
+          )}
         <StyledProductImg alt={title} src={media} />
       </Box>
-      <Link color="inherit" underline="hover">
-        <Typography variant="subtitle1" sx={{ mt: 2, mb: 0.5 }}>
-          {title}
-        </Typography>
-      </Link>
-      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1 }}>
-        {breed}
-      </Typography>
-  
-      <Divider sx={{ borderStyle: 'dashed' }} />
-  
-      <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" sx={{ py: 3 }}>
-        <div>
-          <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Gender
+
+      <Box sx={{ mx: 3 }}>
+        <Box sx={{ textAlign: 'left', pb: 3 }}>
+          <Typography variant="subtitle1" sx={{ mt: 2, mb: 0.5, color: '#2C4CFF' }}>
+            {title}
           </Typography>
-          <Typography variant="caption">{gender}</Typography>
-        </div>
-  
-        <div>
-          <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Life Stage
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            {breed}
           </Typography>
-  
-          <Typography variant="caption">{lifeStage}</Typography>
-        </div>
-  
-        <div>
-          <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled' }}>
-            Rewards 
-          </Typography>
-          <Typography variant="caption">
-            50 KBL
-          </Typography>
-        </div>
+        </Box>
+        <Box sx={{ pb: 3, marginLeft: -3, marginRight: -3 }}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            <div>
+              <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
+                Gender
+              </Typography>
+              <Typography variant="value">{gender}</Typography>
+            </div>
+
+            <div>
+              <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
+                Life Stage
+              </Typography>
+              <Typography variant="value">{lifeStage}</Typography>
+            </div>
+
+            <div>
+              <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
+                Rewards
+              </Typography>
+              <Typography variant="value">50 KBL</Typography>
+            </div>
+          </Box>
+        </Box>
+        <Box sx={{ marginBottom: 3 }}>
+          <Button
+            variant="contained"
+            sx={{
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '8px 12px',
+              gap: 6,
+              border: '1px solid #64748B',
+              borderRadius: 1,
+              backgroundColor: 'transparent',
+              fontStyle: 'normal',
+              fontWeight: 600,
+              fontSize: 12,
+              lineHeight: '18px',
+              textAlign: 'center',
+              color: '#64748B',
+              textDecoration: 'none',
+              boxShadow: 'none',
+              '&:hover': {
+                backgroundColor: 'transparent',
+              },
+            }}
+          >
+            View Pet
+          </Button>
+        </Box>
       </Box>
-  
-      {/* Front Card 
-      <Box className={`${styles.flipCard} ${flipped ? styles.flipCardBack : styles.flipCardFront}`} onClick={handleFlip}>
-        <Typography variant="subtitle2">Front Card</Typography>
-      </Box> */}
-  
-      {/* Back Card 
-      <Box className={`${styles.flipCard} ${flipped ? styles.flipCardFront : styles.flipCardBack}`} onClick={handleFlip}>
-        <Typography variant="subtitle2">Back Card</Typography>
-      </Box> */}
-  
     </StyledCard>
   );
   
