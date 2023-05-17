@@ -120,9 +120,9 @@ export default function ShopProductCard({ product }) {
 
             <div>
               <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
-                Rewards
+                Weight
               </Typography>
-              <Typography variant="value">50 KBL</Typography>
+              <Typography variant="value">6 LBS</Typography>
             </div>
           </Box>
         </Box>
