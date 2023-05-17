@@ -14,7 +14,7 @@ import { ColorPreview } from '../../../components/color-utils';
 // ----------------------------------------------------------------------
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  ...bgBlur({ color: theme.palette.background.pink }),
+  ...bgBlur({ color: "#FFFFFF" }),
   position: 'relative',
   width: '100%',
   height: '100%',
