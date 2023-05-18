@@ -53,9 +53,11 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
 
   return (
       <>
-      <Link to="/dashboard/pets" component={RouterLink} sx={{ display: 'contents' }}>
-      {logo}
-    </Link><Chip label="alpha" size="small" variant="outlined" sx={{ marginLeft: 1 }} /></>
+        <Link to="/dashboard/pets" component={RouterLink} sx={{ display: 'contents' }}>
+          {logo}
+        </Link>
+        <Chip label="alpha" size="small" variant="outlined" sx={{ marginLeft: 1, backgroundColor: '#F6F8FA', color: '#868E96' }} />
+      </>
   );
 });
 

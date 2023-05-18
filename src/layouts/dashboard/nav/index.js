@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
@@ -13,14 +13,14 @@ import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
-import { navConfig, navConfig2 } from './config';
+import { navConfig, navConfig2, logout } from './config'; // Update the import statement
 
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
 
 // ----------------------------------------------------------------------
 
-const NAV_WIDTH = 300;
+const NAV_WIDTH = 280;
 
 const StyledAccount = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -33,8 +33,6 @@ const StyledAccount = styled('div')(({ theme }) => ({
   // },
 }));
 
-// ----------------------------------------------------------------------
-
 Nav.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,
@@ -45,8 +43,8 @@ export default function Nav({ openNav, onCloseNav }) {
   const firstName = localStorage.getItem('firstName');
   const lastName = localStorage.getItem('lastName');
 
-
   const isDesktop = useResponsive('up', 'lg');
+  const navigate = useNavigate(); // Add the useNavigate hook here
 
   useEffect(() => {
     if (openNav) {
@@ -54,6 +52,10 @@ export default function Nav({ openNav, onCloseNav }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  const handleLogout = async () => { // Define the handleLogout function
+    await logout(navigate); // Call the logout function from the config and pass the navigate function
+  };
 
   const renderContent = (
     <Scrollbar
@@ -66,30 +68,16 @@ export default function Nav({ openNav, onCloseNav }) {
         <Logo />
       </Box>
 
-      <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none">
-          <StyledAccount>
-           {/* <Avatar src={account.photoURL} alt="photoURL" /> */} 
-
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {JSON.parse(firstName)} {JSON.parse(lastName)}
-
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
-              </Typography>
-            </Box>
-          </StyledAccount>
-        </Link>
-      </Box>
-
       <NavSection data={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <NavSection data={navConfig2} />
+      <Box sx={{ ml: 5 }}>
+        <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+          {JSON.parse(firstName)} {JSON.parse(lastName)}
+        </Typography>
+      </Box>
+      <NavSection data={navConfig2} handleLogout={handleLogout} />
 
     </Scrollbar>
   );
@@ -110,8 +98,6 @@ export default function Nav({ openNav, onCloseNav }) {
             sx: {
               width: NAV_WIDTH,
               background: 'linear-gradient(112.91deg, rgba(255, 255, 255, 0.05) 3.51%, rgba(255, 255, 255, 0.05) 111.71%)',
-              // borderRightStyle: 'dashed',
-              // background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)',
             },
           }}
         >

@@ -98,28 +98,28 @@ export default function ShopProductCard({ product }) {
           <Typography variant="subtitle1" sx={{ mt: 2, mb: 0.5, color: '#2C4CFF' }}>
             {title}
           </Typography>
-          <Typography variant="body2" sx={{ mb: 1 }}>
+          <Typography variant="body2" sx={{ mb: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {breed}
           </Typography>
         </Box>
         <Box sx={{ pb: 3, marginLeft: -3, marginRight: -3 }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
             <div>
-              <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
+              <Typography variant="caption" component="div" sx={{ mb: 0.75, textTransform: 'uppercase' }}>
                 Gender
               </Typography>
               <Typography variant="value">{gender}</Typography>
             </div>
 
             <div>
-              <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
+              <Typography variant="caption" component="div" sx={{ mb: 0.75, textTransform: 'uppercase' }}>
                 Life Stage
               </Typography>
               <Typography variant="value">{lifeStage}</Typography>
             </div>
 
             <div>
-              <Typography variant="caption" component="div" sx={{ mb: 0.75, color: 'text.disabled', textTransform: 'uppercase' }}>
+              <Typography variant="caption" component="div" sx={{ mb: 0.75, textTransform: 'uppercase' }}>
                 Weight
               </Typography>
               <Typography variant="value">6 LBS</Typography>

@@ -24,7 +24,8 @@ const HEADER_DESKTOP = 92;
 
 
 const StyledRoot = styled(AppBar)(({ theme }) => ({
-  ...bgBlur({ color: theme.palette.background.pink }),
+  // ...bgBlur({ color: theme.palette.background.pink }),
+  backgroundColor: 'transparent',
   boxShadow: 'none',
   [theme.breakpoints.up('lg')]: {
     width: `calc(100% - ${NAV_WIDTH + 1}px)`,

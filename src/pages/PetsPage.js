@@ -9,7 +9,7 @@ import { Container, Stack, Typography, Button, Box, Modal, Grid } from '@mui/mat
 // components
 import { magic } from "../magic";
 import Loading from "./Loading";
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import { ProductSort, PetList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 import Iconify from '../components/iconify';
 import EmptyContent from '../components/empty-content';
 
@@ -147,13 +147,13 @@ export default function ProductsPage() {
 
 
       <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3} sx={{ mt: -1 }}>
           <Typography variant="h4" gutterBottom>
           My Pets
           </Typography>
            {(petCount>0) &&
-            <Button onClick={handleOpen} variant="contained">
-              New Pet
+            <Button onClick={handleOpen} variant="contained" sx={{ boxShadow: 'none' }}>
+              Add Pet
             </Button>
           }
         </Stack>
@@ -183,7 +183,7 @@ export default function ProductsPage() {
 
         
         {!isEmptyCart ? (
-          <ProductList pets={userPets} />
+          <PetList pets={userPets} />
         ) : (
           <EmptyContent
             title="Welcome to the future of pet care."

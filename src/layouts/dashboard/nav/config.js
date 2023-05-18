@@ -1,3 +1,6 @@
+import { useNavigate } from 'react-router-dom';
+import { magic } from '../../../magic';
+
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // component
@@ -7,7 +10,9 @@ import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------
 
-const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
+const icon = (name) => (
+  <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+);
 
 const ICONS = {
   blog: icon('ic_blog'),
@@ -73,11 +78,6 @@ const navConfig = [
 
 const navConfig2 = [
   {
-    title: 'me',
-    path: '/dashboard/pets',
-    icon: icon('ic_user'),
-  },
-  {
     title: 'Your Pet Wallet',
     path: '/dashboard/membership',
     icon: icon('ic_invoice'),
@@ -85,11 +85,19 @@ const navConfig2 = [
   },
   {
     title: 'Logout',
-    path: '/dashboard/membership',
+    path: '/login',
     icon: icon('ic_file'),
-    disabled: true,
+    disabled: false,
   },
-
 ];
 
-export { navConfig, navConfig2 };
+const logout = async (navigate) => {
+  try {
+    await magic.user.logout();
+    navigate('/login', { replace: true });
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
+};
+
+export { navConfig, navConfig2, logout };

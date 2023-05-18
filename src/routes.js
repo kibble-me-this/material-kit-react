@@ -7,7 +7,7 @@ import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
-import ProductsPage from './pages/ProductsPage';
+import PetsPage from './pages/PetsPage';
 import GeneralBankingPage from './pages/DashboardAppPage';
 import BlankPage from './pages/BlankPage';
 import RegisterPage from './pages/RegisterPage';
@@ -22,7 +22,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <GeneralBankingPage /> },
-        { path: 'pets', element: <ProductsPage /> },
+        { path: 'pets', element: <PetsPage /> },
         { path: 'rewards', element: <UserPage /> },
         { path: 'membership', element: <BlogPage /> },
         { path: 'integrations', element: <BlogPage /> },
