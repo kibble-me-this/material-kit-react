@@ -27,8 +27,9 @@ let near;
 // ----------------------------------------------------------------------
 
 export default function ProductsPage() {
+  const [isLoading, setIsLoading] = useState(false);
   const [openFilter, setOpenFilter] = useState(false);
-  const [userMetadata, setUserMetadata] = useState();
+  const [userMetadata, setUserMetadata] = useState(null);
   const [petCount, setPetCount] = useState(null);
   const [nearBalance, setNearBalance] = useState(null);
   const [userPets, setUserPets] = useState([]);
@@ -46,6 +47,7 @@ export default function ProductsPage() {
   };
 
   useEffect(() => {
+      setIsLoading(true);    
       // Create NEAR instance
       (async () => {
         const { connect, keyStores } = nearAPI;
@@ -102,6 +104,7 @@ export default function ProductsPage() {
   
     setUserPets(res);
     setPetCount(res.length);
+    setIsLoading(false);
  }
 
  const handleFetchBalance = async (account_id) => {
@@ -149,50 +152,54 @@ export default function ProductsPage() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={3} sx={{ mt: -1 }}>
           <Typography variant="h4" gutterBottom>
-          My Pets
+            My Pets
           </Typography>
-           {(petCount>0) &&
+          {petCount > 0 && (
             <Button onClick={handleOpen} variant="contained" sx={{ boxShadow: 'none' }}>
               Add Pet
             </Button>
-          }
+          )}
         </Stack>
-      
+
         <Box borderBottom="1px solid #CED4DA" width="100%" mt={1} />
 
         <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="space-between" sx={{ mb: 5 }}>
-        {/* <Box sx={{ flexGrow: 1 }}>
-        {storedLastTx && (
-          <Link 
-            to={`https://explorer.testnet.near.org/transactions/${JSON.parse(storedLastTx)}`} 
-            target="_blank"
-          >
-            TESTING - Latest passport on NEAR
-          </Link>
-        )}
-        </Box>
-         <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-          <ProductFilterSidebar
-            openFilter={openFilter}
-            onOpenFilter={handleOpenFilter}
-            onCloseFilter={handleCloseFilter}
-          />
-          <ProductSort />
-        </Stack> */}
-      </Stack>
+          {/* <Box sx={{ flexGrow: 1 }}>
+            {storedLastTx && (
+              <Link
+                to={`https://explorer.testnet.near.org/transactions/${JSON.parse(storedLastTx)}`}
+                target="_blank"
+              >
+                TESTING - Latest passport on NEAR
+              </Link>
+            )}
+          </Box>
+          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
+            <ProductFilterSidebar
+              openFilter={openFilter}
+              onOpenFilter={handleOpenFilter}
+              onCloseFilter={handleCloseFilter}
+            />
+            <ProductSort />
+          </Stack> */}
+        </Stack>
 
-        
-        {!isEmptyCart ? (
-          <PetList pets={userPets} />
+        {isLoading ? (
+          <Loading />
         ) : (
-          <EmptyContent
-            title="Welcome to the future of pet care."
-            description="Let's add your furry friends."
-            isEmptyWallet={isEmptyWallet}
-            handleClose={handleClose}
-          />          
+          <>
+            {!isEmptyCart ? (
+              <PetList pets={userPets} />
+            ) : (
+              <EmptyContent
+                title="Welcome to the future of pet care."
+                description="Let's add your furry friends."
+                isEmptyWallet={isEmptyWallet}
+                handleClose={handleClose}
+              />
+            )}
+          </>
         )}
-
       </Container>
     </>: <Loading />
 }

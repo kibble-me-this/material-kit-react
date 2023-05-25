@@ -10,6 +10,12 @@ import { bgBlur } from '../../../utils/cssStyles';
 // components
 import Label from '../../../components/label';
 import { ColorPreview } from '../../../components/color-utils';
+import Iconify from '../../../components/iconify';
+
+
+
+
+
 
 // ----------------------------------------------------------------------
 
@@ -63,14 +69,11 @@ export default function ShopProductCard({ product }) {
             variant="caption"
             color={(title === 'sale' && 'error') || 'info'}
             sx={{
-              boxSizing: 'border-box',
               display: 'flex',
-              flexDirection: 'column',
               alignItems: 'center',
-              padding: '8px 12px',
+              justifyContent: 'center',
               gap: '8px',
               position: 'absolute',
-              width: '78px',
               height: '30px',
               right: '16px',
               top: '16px',
@@ -85,10 +88,13 @@ export default function ShopProductCard({ product }) {
               textAlign: 'center',
               letterSpacing: '0.01em',
               color: '#343A40',
+              padding: '0 8px', // Adjust the padding as needed
             }}
           >
-            1,000
+            <Iconify icon="eva:plus-fill" />
+            <span>1,000</span>
           </Label>
+
           )}
         <StyledProductImg alt={title} src={media} />
       </Box>
