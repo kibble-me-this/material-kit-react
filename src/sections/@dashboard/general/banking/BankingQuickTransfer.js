@@ -1,4 +1,9 @@
 import PropTypes from 'prop-types';
+
+import { API } from 'aws-amplify';
+import { gql } from 'graphql-tag';
+
+
 import emailjs from "@emailjs/browser";
 import { useCookies } from "react-cookie";
 import { useState, useEffect, useRef } from 'react';
@@ -38,6 +43,19 @@ BankingQuickTransfer.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
 };
+
+
+const createReservationMutation = gql`
+  mutation CreateReservation($email: String!, $petCount: Int!, $publicAddress: String!) {
+    createReservation(input: { email: $email, petCount: $petCount, publicAddress: $publicAddress }) {
+      id
+      email
+      petCount
+      publicAddress
+      createdAt
+    }
+  }
+`;
 
 export default function BankingQuickTransfer({ title, subheader, list, user, sx, ...other }) {
   const theme = useTheme();
@@ -125,6 +143,28 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
         }
       );
   };
+
+  const handleReserveSpot = async () => {
+    try {
+      // Make the API call to create a new reservation
+      // Pass in the necessary data (email, pet count, public address) as variables
+      const response = await API.graphql({
+        query: createReservationMutation,
+        variables: {
+          email: user.email,
+          petCount: amount,
+          publicAddress: user.publicAddress,
+        },
+      });
+  
+      // Handle the response and update the UI accordingly
+      console.log(response.data.createReservation);
+      // ...
+    } catch (error) {
+      console.error(error);
+      // Handle the error and show an error message to the user
+    }
+  };
   
   return (
     <>
@@ -207,6 +247,7 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
               size="large"
               disabled={amount < 1}
               sx={{ mt: 3 }}
+              onClick={handleReserveSpot}
             >
               Reserve Your Spot
             </Button>
