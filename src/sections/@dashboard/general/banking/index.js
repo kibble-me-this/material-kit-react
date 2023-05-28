@@ -1,5 +1,5 @@
 export { default as BankingContacts } from './BankingContacts';
-export { default as BankingQuickTransfer } from './BankingQuickTransfer';
+export { default as ReserveSpotInLine } from './ReserveSpotInLine';
 export { default as BankingInviteFriends } from './BankingInviteFriends';
 export { default as BankingWidgetSummary } from './BankingWidgetSummary';
 export { default as BankingCurrentBalance } from './BankingCurrentBalance';

@@ -37,7 +37,7 @@ const formattedLineBehind = LINE_BEHIND.toLocaleString();
 
 // ----------------------------------------------------------------------
 
-BankingQuickTransfer.propTypes = {
+ReserveSpotInLine.propTypes = {
   sx: PropTypes.object,
   list: PropTypes.array,
   title: PropTypes.string,
@@ -57,7 +57,7 @@ const createReservationMutation = gql`
   }
 `;
 
-export default function BankingQuickTransfer({ title, subheader, list, user, sx, ...other }) {
+export default function ReserveSpotInLine({ title, subheader, list, user, sx, ...other }) {
   const theme = useTheme();
   const [autoWidth, setAutoWidth] = useState(24);
   const [amount, setAmount] = useState(1);
@@ -195,7 +195,8 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
     boxShadow: "0px 12px 30px rgba(19, 31, 102, 0.1)",
     borderRadius: "16px",
     background: "linear-gradient(110.25deg, rgba(255, 255, 255, 0.6) 0.67%, rgba(255, 255, 255, 0.04) 99.33%)", }}>    
-  <CardContent sx={{ padding: theme.spacing(4) }}>
+    <CardContent sx={{ padding: theme.spacing(4) }}>
+      {/* step 1 - how many pets form */}
       {step === 1 && (
         <form ref={form} onSubmit={sendEmail}>
           <Stack spacing={3}>
@@ -255,9 +256,9 @@ export default function BankingQuickTransfer({ title, subheader, list, user, sx,
         </form>
 
       )}
-    
+      {/* step 2 - place in line confirmation */}
       {step === 2 && (
-        <ConfirmTransferDialog
+        <ConfirmReservationDialog
           open={openModal}
           autoWidth={autoWidth}
           amount={amount}
@@ -313,7 +314,7 @@ function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
 
 // ----------------------------------------------------------------------
 
-ConfirmTransferDialog.propTypes = {
+ConfirmReservationDialog.propTypes = {
   open: PropTypes.bool,
   onBlur: PropTypes.func,
   onClose: PropTypes.func,
@@ -323,7 +324,7 @@ ConfirmTransferDialog.propTypes = {
   contactInfo: PropTypes.object,
 };
 
-function ConfirmTransferDialog({
+function ConfirmReservationDialog({
   amount,
 }) {
 

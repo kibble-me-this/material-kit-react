@@ -19,7 +19,7 @@ import {
   _bankingCreditCard,
   _bankingRecentTransitions,
 } from '../_mock/arrays';
-import { BankingQuickTransfer } from '../sections/@dashboard/general/banking';
+import { ReserveSpotInLine } from '../sections/@dashboard/general/banking';
 
 
  let near;
@@ -29,19 +29,13 @@ import { BankingQuickTransfer } from '../sections/@dashboard/general/banking';
 
 export default function DashboardAppPage() {
   const theme = useTheme();
-
-
   const [userMetadata, setUserMetadata] = useState();
-  const [petCount, setPetCount] = useState(null);
   const [nearBalance, setNearBalance] = useState(null);
-  const [userPets, setUserPets] = useState([]);
   const navigate = useNavigate();
   const networkId = "testnet"; // testnet, betanet, or mainnet
   const [open, setOpen] = useState(true);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const [isEmptyWallet, setIsEmptyWallet] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleClose = (event, reason) => {
     if (reason === 'escapeKeyDown') {
@@ -73,7 +67,6 @@ export default function DashboardAppPage() {
       magic.user.getMetadata().then(user => {
         setUserMetadata(user);
         handleFetchBalance(user.publicAddress);
-        handleFetchPassports(user.publicAddress); 
       });
     } else {
       // If no user is logged in, redirect to `/login`
@@ -82,43 +75,20 @@ export default function DashboardAppPage() {
   });
 }, []);   
 
- async function handleFetchPassports(account_id) {
-      
-  const provider = new nearAPI.providers.JsonRpcProvider(
-     `https://rpc.${networkId}.near.org`
-  );
-
-  const jsonstring = JSON.stringify({account_id});
-  const encodedData = window.btoa(jsonstring);
-
-  const rawResult = await provider.query({
-     request_type: "call_function",
-     account_id: "ilovepets-m2.testnet",
-     method_name: "ppp_tokens_for_owner",
-     args_base64: encodedData,
-     finality: "optimistic",
-  });
-
-  const encodedResult = new Uint8Array(rawResult.result);
-  const decoder = new TextDecoder();
-  const decodedResult = decoder.decode(encodedResult);
-  const res = JSON.parse(decodedResult);
-
-  setUserPets(res);
-  setPetCount(res.length);
-}
-
 const handleFetchBalance = async (account_id) => {
   const account = await near.account(account_id);
   account.getAccountBalance().then(bal => {
     setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
-    if(bal.total) 
+    if (bal.total) {
+      setIsEmptyWallet(false);
       navigate('/dashboard/pets', { replace: true });
+    }
+    setIsLoading(false);
   });
-}
+};
 
-const isEmptyCart = !petCount;
-const isEmptyWallet = !nearBalance;
+
+
 
 return userMetadata ? 
   <>
@@ -127,25 +97,33 @@ return userMetadata ?
     </Helmet>
 
     <Container maxWidth="xl">
-      {isEmptyWallet ? (
-        <Modal open={open} 
-        onClose={handleClose} 
-        BackdropProps={{style: {ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'}}}
-        >
-          <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
-            <Container>
-              <Grid container>
-                <BankingQuickTransfer title="" subheader="" list={_bankingContacts} user={userMetadata}/>
-              </Grid>
-            </Container>
-          </Box>
-        </Modal>
-      ) : (
+  {isEmptyWallet && !isLoading ? (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      BackdropProps={{
+        style: { ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)' }
+      }}
+    >
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
+        <Container>
+          <Grid container>
+            <ReserveSpotInLine title="" subheader="" list={_bankingContacts} user={userMetadata} />
+          </Grid>
+        </Container>
+      </Box>
+    </Modal>
+  ) : (
+    <>
+      {!isLoading && (
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
       )}
-    </Container>
+      {/* Other content */}
+    </>
+  )}
+</Container>
   </>: <Loading />
 
 }
