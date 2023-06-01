@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-alphafrontmui-dev-02150-authRole",
+      "UnauthRoleArn": "arn:aws:iam::547301619201:role/amplify-alphafrontmui-dev-02150-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::547301619201:role/amplify-alphafrontmui-dev-02150-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-alphafrontmui-dev-02150-deployment",
+      "UnauthRoleName": "amplify-alphafrontmui-dev-02150-unauthRole",
+      "StackName": "amplify-alphafrontmui-dev-02150",
+      "StackId": "arn:aws:cloudformation:us-east-1:547301619201:stack/amplify-alphafrontmui-dev-02150/d59fb610-0033-11ee-964b-0a1bfcdcd2df",
+      "AmplifyAppId": "d1ui3cbn9xfwg1"
+    }
+  }
+}
