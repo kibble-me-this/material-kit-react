@@ -79,10 +79,10 @@ const handleFetchBalance = async (account_id) => {
   const account = await near.account(account_id);
   account.getAccountBalance().then(bal => {
     setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
-    // if (bal.total) {
-    //   setIsEmptyWallet(false);
-    //   navigate('/dashboard/pets', { replace: true });
-      // }
+    if (bal.total) {
+      setIsEmptyWallet(false);
+      navigate('/dashboard/pets', { replace: true });
+     }
     setIsLoading(false);
   });
 };
