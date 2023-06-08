@@ -10,6 +10,14 @@
       "StackName": "amplify-alphafrontmui-dev-02150",
       "StackId": "arn:aws:cloudformation:us-east-1:547301619201:stack/amplify-alphafrontmui-dev-02150/d59fb610-0033-11ee-964b-0a1bfcdcd2df",
       "AmplifyAppId": "d1ui3cbn9xfwg1"
+    },
+    "categories": {
+      "auth": {
+        "petasticpets": {}
+      },
+      "api": {
+        "petasticpets": {}
+      }
     }
   }
 }
