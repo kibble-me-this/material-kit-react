@@ -11,7 +11,7 @@ import { Grid, Container, Stack, Button, Modal, Box, Typography, Backdrop } from
 // components
 import { magic } from "../magic";
 import Loading from "./Loading";
-import Iconify from '../components/iconify';
+// import Iconify from '../components/iconify';
 // sections
 
 import {
@@ -76,54 +76,79 @@ export default function DashboardAppPage() {
 }, []);   
 
 const handleFetchBalance = async (account_id) => {
-  const account = await near.account(account_id);
-  account.getAccountBalance().then(bal => {
+  try {
+    const account = await near.account(account_id);
+    const bal = await account.getAccountBalance();
     setNearBalance(nearAPI.utils.format.formatNearAmount(bal.total));
     if (bal.total) {
       setIsEmptyWallet(false);
-      navigate('/dashboard/pets', { replace: true });
-     }
+    }
     setIsLoading(false);
-  });
+  } catch (error) {
+    // Handle the error when the account is not active or does not exist
+    console.error('Error fetching account balance:', error);
+    setIsEmptyWallet(true);
+    setIsLoading(false);
+  }
 };
 
 
 
 
-return userMetadata ? 
+
+return userMetadata ? (
   <>
     <Helmet>
-      <title> Dashboard | Petastic </title>
+      <title>Dashboard | Petastic</title>
     </Helmet>
 
     <Container maxWidth="xl">
-  {isEmptyWallet && !isLoading ? (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      BackdropProps={{
-        style: { ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)' }
-      }}
-    >
-      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
-        <Container>
-          <Grid container>
-            <ReserveSpotInLine title="" subheader="" list={_bankingContacts} user={userMetadata} />
-          </Grid>
-        </Container>
-      </Box>
-    </Modal>
-  ) : (
-    <>
-      {!isLoading && (
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
-        </Typography>
+      {!isLoading ? (
+        <>
+          {isEmptyWallet && !isLoading ? (
+            <Modal
+              open={open}
+              onClose={handleClose}
+              BackdropProps={{
+                style: {
+                  ClickBackdrop: false,
+                  background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  outline: 'none',
+                }}
+              >
+                <Container>
+                  <Grid container>
+                    {/* Render the section when isEmptyWallet is true */}
+                    <ReserveSpotInLine title="" subheader="" list={_bankingContacts} user={userMetadata} />
+                  </Grid>
+                </Container>
+              </Box>
+            </Modal>
+          ) : (
+            <>
+              <Typography variant="h4" sx={{ mb: 5 }}>
+                Hi, Welcome back
+              </Typography>
+              {/* Other content */}
+            </>
+          )}
+        </>
+      ) : (
+        <Loading />
       )}
-      {/* Other content */}
-    </>
-  )}
-</Container>
-  </>: <Loading />
+    </Container>
+  </>
+) : (
+  <Loading />
+);
 
 }

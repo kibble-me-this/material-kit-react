@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
-import { API, graphqlOperation, Auth } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import gql from 'graphql-tag';
 import emailjs from '@emailjs/browser';
-import { useCookies } from 'react-cookie';
 import { useState, useEffect, useRef } from 'react';
 import { useTheme } from '@mui/material/styles';
 import {
@@ -17,23 +16,13 @@ import {
   CardContent,
 } from '@mui/material';
 
-import useLocalStorage from '../../../../hooks/useLocalStorage';
 import CHECK_MARK from '../../../../assets/images/Icon.svg';
 
 const STEP = 1;
 const MIN_AMOUNT = 1;
-const AVATAR_SIZE = 40;
 const MAX_AMOUNT = 10;
 const LINE_FRONT = 10000;
 const LINE_BEHIND = 50000;
-const formattedLineBehind = LINE_BEHIND.toLocaleString();
-
-ReserveSpotInLine.propTypes = {
-  sx: PropTypes.object,
-  list: PropTypes.array,
-  title: PropTypes.string,
-  subheader: PropTypes.string,
-};
 
 const createReservationMutation = gql`
   mutation CreateReservation($email: String!, $publicAddress: String!, $petCount: Int!) {
@@ -47,33 +36,70 @@ const createReservationMutation = gql`
   }
 `;
 
+const getReservationQuery = gql`
+  query GetReservation($email: String!, $publicAddress: String!) {
+    getReservation(email: $email, publicAddress: $publicAddress) {
+      id
+      email
+      publicAddress
+      createdAt
+      petCount
+    }
+  }
+`;
 
 export default function ReserveSpotInLine({ title, subheader, list, user, sx, ...other }) {
   const theme = useTheme();
   const [autoWidth, setAutoWidth] = useState(24);
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState(() => {
+    const storedAmount = localStorage.getItem('reservationAmount');
+    return storedAmount ? parseInt(storedAmount, 10) : 1;
+  });
   const [openModal, setOpenModal] = useState(false);
   const [selectContact, setSelectContact] = useState(0);
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(() => {
+    const storedStep = localStorage.getItem('reservationStep');
+    return storedStep ? parseInt(storedStep, 10) : 1;
+  });
   const carouselRef = useRef(null);
   const getContactInfo = list.find((_, index) => index === selectContact);
-  const [emailSent, setEmailSent] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(0);
-  const [storedCount, setStoredCount] = useLocalStorage('petCount', 0);
-  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const fetchReservation = async () => {
+      try {
+        const response = await API.graphql(
+          graphqlOperation(getReservationQuery, {
+            email: user.email,
+            publicAddress: user.publicAddress,
+          })
+        );
+
+        if (response.data.getReservation) {
+          const { petCount } = response.data.getReservation;
+          setAmount(petCount);
+          setStep(2);
+        } else {
+          // No reservation found in the database, reset to step 1
+          setStep(1);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchReservation();
+  }, []);
 
   useEffect(() => {
     if (amount) {
       handleAutoWidth();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
   useEffect(() => {
-    if (storedCount > 0) {
-      handleStepChange();
-    }
-  }, [storedCount]);
+    localStorage.setItem('reservationAmount', amount.toString());
+    localStorage.setItem('reservationStep', step.toString());
+  }, [amount, step]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -83,7 +109,7 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
     setOpenModal(false);
     setStep(1);
     setSelectContact(0);
-    setAmount(0);
+    setAmount(1);
   };
 
   const handleAutoWidth = () => {
@@ -100,8 +126,8 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
   };
 
   const handleBlur = () => {
-    if (amount < 0) {
-      setAmount(0);
+    if (amount < MIN_AMOUNT) {
+      setAmount(MIN_AMOUNT);
     } else if (amount > MAX_AMOUNT) {
       setAmount(MAX_AMOUNT);
     }
@@ -126,7 +152,6 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
       .then(
         (result) => {
           console.log(result.text);
-          setStoredCount(amount);
           handleStepChange();
         },
         (error) => {
@@ -146,10 +171,6 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
         aws_appsync_apiKey: 'da2-6beeidvh4zerxjurelzksvoqay',
       });
 
-      // console.log('Amount:', amount);
-      console.log('Email:', user.email);
-      console.log('Public Address:', user.publicAddress);
-
       // Construct the GraphQL mutation using graphqlOperation
       const mutation = graphqlOperation(createReservationMutation, {
         email: user.email,
@@ -157,8 +178,6 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
         publicAddress: user.publicAddress,
       });
 
-      console.log('GraphQL Mutation:', mutation);
-  
       // Make the API call to create a new reservation
       const response = await API.graphql(mutation);
 
@@ -168,8 +187,8 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
         if (debugInfo) {
           console.log('Debug Information:', debugInfo);
         }
-      }    
-  
+      }
+
       // Handle the response and update the UI accordingly
       console.log('API Response:', response.data.createReservation);
       // ...
@@ -178,8 +197,6 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
       // Handle the error and show an error message to the user
     }
   };
-  
-  
 
   return (
     <>
@@ -195,7 +212,7 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
               marginBottom: '32px',
             }}
           >
-            Reserve your spot to a whole new pet experience.
+            Reserve your spot to a personalized pet experience.
           </Typography>
         ) : (
           <Stack direction="row" alignItems="center" marginBottom="32px">
@@ -238,7 +255,7 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
                   </Typography>
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', mt: 2 }}>
                     <Slider
-                      value={typeof amount === 'number' ? amount : 0}
+                      value={amount}
                       valueLabelDisplay="auto"
                       step={STEP}
                       marks
@@ -247,14 +264,14 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
                       onChange={handleChangeSlider}
                       sx={{ flexGrow: 1 }}
                     />
-                    <InputAmount
-                      type="number"
-                      name="pet_count"
-                      amount={amount}
-                      onBlur={handleBlur}
-                      maxWidth={autoWidth}
+                    <Input
+                      disableUnderline
+                      size="small"
+                      value={amount}
                       onChange={handleChangeInput}
-                      sx={{ flexGrow: 1, ml: 2 }}
+                      onBlur={handleBlur}
+                      inputProps={{ step: STEP, min: MIN_AMOUNT, max: MAX_AMOUNT, type: 'number' }}
+                      sx={{ flexGrow: 1, ml: 2, maxWidth: autoWidth }}
                     />
                     <input
                       type="hidden"
@@ -263,17 +280,13 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
                       readOnly
                     />
                     <input name="magic_user" value={user.email} type="hidden" />
-                    <input
-                      name="public_address"
-                      value={user.publicAddress}
-                      type="hidden"
-                    />
+                    <input name="public_address" value={user.publicAddress} type="hidden" />
                   </Box>
                   <Button
                     type="submit"
                     variant="contained"
                     size="large"
-                    disabled={amount < 1}
+                    disabled={amount < MIN_AMOUNT}
                     sx={{ mt: 3 }}
                     onClick={handleReserveSpot}
                   >
@@ -301,53 +314,18 @@ export default function ReserveSpotInLine({ title, subheader, list, user, sx, ..
   );
 }
 
-InputAmount.propTypes = {
-  amount: PropTypes.number,
-  autoWidth: PropTypes.number,
-  onBlur: PropTypes.func,
-  onChange: PropTypes.func,
+ReserveSpotInLine.propTypes = {
   sx: PropTypes.object,
-};
-
-function InputAmount({ autoWidth, amount, onBlur, onChange, sx, ...other }) {
-  return (
-    <Stack direction="row" justifyContent="center" spacing={1} sx={sx}>
-      <Input
-        disableUnderline
-        size="small"
-        value={amount}
-        onChange={onChange}
-        onBlur={onBlur}
-        inputProps={{ step: STEP, min: MIN_AMOUNT, max: MAX_AMOUNT, type: 'number' }}
-        sx={{
-          typography: 'h5',
-          '& input': {
-            p: 0,
-            textAlign: 'center',
-            width: '100px',
-          },
-        }}
-        {...other}
-      />
-    </Stack>
-  );
-}
-
-ConfirmReservationDialog.propTypes = {
-  open: PropTypes.bool,
-  onBlur: PropTypes.func,
-  onClose: PropTypes.func,
-  amount: PropTypes.number,
-  onChange: PropTypes.func,
-  autoWidth: PropTypes.number,
-  contactInfo: PropTypes.object,
+  list: PropTypes.array,
+  title: PropTypes.string,
+  subheader: PropTypes.string,
 };
 
 function ConfirmReservationDialog({ amount }) {
   const petWord = amount === 1 ? 'pet' : 'pets';
   const petVerb = amount === 1 ? 'has' : 'have';
   const petPronoun = amount === 1 ? 'its' : 'their';
-  const petCount = localStorage.getItem('petCount');
+  const petCount = amount;
 
   return (
     <>
