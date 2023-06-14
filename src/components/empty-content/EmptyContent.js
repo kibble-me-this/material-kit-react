@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
@@ -25,13 +25,30 @@ EmptyContent.propTypes = {
 
 export default function EmptyContent({ title, description, isEmptyWallet, handleClose, sx, ...other }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleOpen = () => {
     setOpen(true);
   };
 
-  
-  const navigate = useNavigate();
+  const handleCloseModal = () => {
+    setOpen(false);
+    handleClose();
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Escape') {
+        handleCloseModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleCloseModal]);
 
   return (
     <Card sx={{ mb: 3 }}>
@@ -64,7 +81,7 @@ export default function EmptyContent({ title, description, isEmptyWallet, handle
               {description}
             </Typography>
             <Modal open={open} 
-              onClose={handleClose} 
+              onClose={handleCloseModal} 
               BackdropProps={{style: {ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'}}}
               >
               <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
