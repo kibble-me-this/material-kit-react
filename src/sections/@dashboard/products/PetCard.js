@@ -3,6 +3,8 @@ import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Card, Link, Typography, Stack, Divider, Button } from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
 import { bgBlur } from '../../../utils/cssStyles';
@@ -128,39 +130,42 @@ export default function ShopProductCard({ product }) {
               <Typography variant="caption" component="div" sx={{ mb: 0.75, textTransform: 'uppercase' }}>
                 Weight
               </Typography>
-              <Typography variant="value">6 LBS</Typography>
+              <Typography variant="value">TBD</Typography>
             </div>
           </Box>
         </Box>
         <Box sx={{ marginBottom: 3 }}>
-          <Button
-            variant="contained"
-            sx={{
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: '8px 12px',
-              gap: 6,
-              border: '1px solid #64748B',
-              borderRadius: 1,
-              backgroundColor: 'transparent',
-              fontStyle: 'normal',
-              fontWeight: 600,
-              fontSize: 12,
-              lineHeight: '18px',
-              textAlign: 'center',
-              color: '#64748B',
-              textDecoration: 'none',
-              boxShadow: 'none',
-              '&:hover': {
-                backgroundColor: 'transparent',
-              },
-            }}
-          >
-            View Pet
-          </Button>
+        <Button
+  variant="contained"
+  sx={{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '8px 12px',
+    border: '1px solid #64748B',
+    borderRadius: 1,
+    backgroundColor: 'transparent',
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: 12,
+    lineHeight: '18px',
+    textAlign: 'center',
+    color: '#64748B',
+    textDecoration: 'none',
+    boxShadow: 'none',
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
+  }}
+>
+  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <LockIcon sx={{ marginRight: 1 }} />
+    <Typography variant="body2">View Details</Typography>
+  </Box>
+</Button>
+
+
         </Box>
       </Box>
     </StyledCard>
