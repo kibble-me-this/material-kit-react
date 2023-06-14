@@ -8,6 +8,7 @@ import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Stack, Button, Modal, Box, Typography, Backdrop } from '@mui/material';
+import EmptyContent from '../components/empty-content';
 // components
 import { magic } from "../magic";
 import Loading from "./Loading";
@@ -135,10 +136,16 @@ return userMetadata ? (
             </Modal>
           ) : (
             <>
+            {!isLoading && navigate('/dashboard/pets')}
               <Typography variant="h4" sx={{ mb: 5 }}>
                 Hi, Welcome back
               </Typography>
-              {/* Other content */}
+              <EmptyContent
+                title="Welcome to the future of pet care."
+                description="Let's add your furry friends."
+                isEmptyWallet={isEmptyWallet}
+                handleClose={handleClose}
+              />
             </>
           )}
         </>

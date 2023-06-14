@@ -75,9 +75,12 @@ export default function EmptyContent({ title, description, isEmptyWallet, handle
                 </Container>
               </Box>
             </Modal>
-            <Button onClick={handleOpen} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                New Pet
+            <Box sx={{ marginTop: '20px' }}>
+
+            <Button onClick={handleOpen} variant="contained" sx={{ padding: '5px 40px' }}>
+                Add Pet
             </Button>
+            </Box>
           </>
         )}
       </Stack>
