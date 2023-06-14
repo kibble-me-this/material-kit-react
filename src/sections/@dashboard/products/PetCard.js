@@ -92,7 +92,7 @@ export default function ShopProductCard({ product }) {
             }}
           >
             <Iconify icon="eva:plus-fill" />
-            <span>1,000</span>
+            <span>100 KBL</span>
           </Label>
 
           )}
