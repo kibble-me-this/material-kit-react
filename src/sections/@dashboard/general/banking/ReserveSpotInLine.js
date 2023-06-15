@@ -21,8 +21,8 @@ import CHECK_MARK from '../../../../assets/images/Icon.svg';
 const STEP = 1;
 const MIN_AMOUNT = 1;
 const MAX_AMOUNT = 10;
-const LINE_FRONT = 505;
-const LINE_BEHIND = 191;
+const LINE_FRONT = 499;
+const LINE_BEHIND = 189;
 
 const createReservationMutation = gql`
   mutation CreateReservation($email: String!, $publicAddress: String!, $petCount: Int!) {
