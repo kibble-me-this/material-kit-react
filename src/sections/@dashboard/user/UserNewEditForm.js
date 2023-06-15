@@ -35,6 +35,8 @@ import FormProvider, {
 
 import useLocalStorage from '../../../hooks/useLocalStorage';
 
+import PetCard from '../products/PetCard';
+
 import UserNewEditFormStep1 from './UserNewEditFormStep1';
 import UserNewEditFormStep2 from './UserNewEditFormStep2';
 import UserNewEditFormStep3 from './UserNewEditFormStep3';
@@ -63,7 +65,15 @@ const ipfs = create({
    }
  });
 
-
+ const pet2 ={
+  "pet_passport_id": "2ed23244b32ae571885d8a98da9fbc8b23b64392109298275504cc68857a0868-Gigi9998",
+  "metadata": {
+    "title": "Gigi9998",
+    "description": "{\"species\": \"Dog\", \"breed\": \"Shih Tzu\", \"life-stage\": \"puppy\"}",
+    "media": "https://ipfs.io/ipfs/QmTd9qqHLzTZmRXSkoDFvT3TcjTMyJWv19nhUh1JhGgHkg"
+  },
+  "pet_owner_id": "2ed23244b32ae571885d8a98da9fbc8b23b64392109298275504cc68857a0868"
+}
 
 export default function UserNewEditForm({ handleClose, isEdit = false, currentUser }) {
   const networkId = "testnet"; // testnet, betanet, or mainnet
@@ -76,6 +86,11 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   const [txHash, setTxHash] = useState("");
   const [sendingTransaction, setSendingTransaction] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [showCongratulations, setShowCongratulations] = useState(false);
+  const [pet, setPet] = useState(null);
+
+
+  
 
   const navigate = useNavigate();
 
@@ -321,12 +336,25 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   
   const onSubmit = async (data) => {
     try {
-      // setImage(data.avatarUrl.files[0]);
       await handleCreatePassport(data);
-      // setStoredLastTx(txHash);
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      handleClose(); // modal callback
-      navigate("/dashboard/pets");
+
+      const pet = {
+        pet_passport_id: `${userMetadata.publicAddress}-${data.petName}`,
+        metadata: {
+          title: data.petName,
+          description: JSON.stringify({
+            species: data.petType,
+            breed: selectedBreed,
+            "life-stage": data.petLifeStage,
+          }),
+          media: data.avatarUrl.preview,
+        },
+        pet_owner_id: userMetadata.publicAddress,
+      };
+
+      setPet(pet);
+      setShowCongratulations(true);
     } catch (error) {
       console.error(error);
     }
@@ -347,171 +375,264 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
     [setValue]
   );
 
+  const handleViewPets = () => {
+    handleClose(); // Close the modal
+    navigate('/dashboard/pets');
+  };
+
+  const handleAddAnotherPet = () => {
+    reset(); // Reset the form values
+    setSelectedBreed([]); // Clear the selected breed tags
+    setSearchTerm(''); // Clear the search term
+    setLoadingBreeds(false); // Stop loading breeds
+    setShowCongratulations(false); // Display the form
+  };
+
   return (
-    <Stack spacing={3}>
-      <Typography sx={{
-        fontSize: "24px",
-        fontWeight: "700",
-        textAlign: "center"
-      }}>One furball at a time.</Typography>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
-            <Card sx={{ pt: 10, pb: 5, px: 3, minWidth: 400 }}>
-              {isEdit && (
-                <Label
-                  color={values.status === 'active' ? 'success' : 'error'}
-                  sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
+  <Stack spacing={3} sx={{ width: '100%', alignItems: 'center' }}>
+    {showCongratulations ? (
+      <Box>
+        <Grid container spacing={8} alignItems="center">
+          <Grid item>
+            <Box sx={{ width: '309px' }}>
+              <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                Yay! You created {pet.metadata.title}'s Pet Passport.
+              </Typography>
+              <Typography variant="body1" sx={{ mt: 2 }}>
+                She earned 100 Kibble Rewards. What can you do with them? We'll let you know soon.
+              </Typography>
+              <Box sx={{ mt: 2 }}>
+                <Box sx={{ mb: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={handleViewPets}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      padding: '12px 18px',
+                      gap: '6px',
+                      width: '309px',
+                      height: '48px',
+                      background: '#2C4CFF',
+                      borderRadius: '32px',
+                      flex: 'none',
+                      order: 0,
+                      alignSelf: 'stretch',
+                      flexGrow: 0,
+                    }}
+                  >
+                    View My Pets
+                  </Button>
+                </Box>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  onClick={handleAddAnotherPet}
+                  sx={{
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: '12px 18px',
+                    gap: '6px',
+                    width: '309px',
+                    height: '48px',
+                    border: '2px solid #2C4CFF',
+                    borderRadius: '32px',
+                    flex: 'none',
+                    order: 0,
+                    alignSelf: 'stretch',
+                    flexGrow: 0,
+                    background: 'transparent',
+                    color: '#2C4CFF',
+                  }}
                 >
-                  {values.status}
-                </Label>
-              )}
-
-              <Box sx={{ mb: 5 }}>
-                <RHFUploadAvatar
-                  name="avatarUrl"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  helperText={
-                    <Typography
-                      variant="caption"
-                      sx={{
-                        mt: 2,
-                        mx: 'auto',
-                        display: 'block',
-                        textAlign: 'center',
-                        color: 'text.secondary',
-                      }}
-                    >
-                      Allowed *.jpeg, *.jpg, *.png, *.gif
-                      <br /> max size of {fData(3145728)}
-                    </Typography>
-                  }
-                />
+                  Add Another Pet
+                </Button>
               </Box>
-
-              {isEdit && (
-                <FormControlLabel
-                  labelPlacement="start"
-                  control={
-                    <Controller
-                      name="status"
-                      control={control}
-                      render={({ field }) => (
-                        <Switch
-                          {...field}
-                          checked={field.value !== 'active'}
-                          onChange={(event) =>
-                            field.onChange(event.target.checked ? 'banned' : 'active')
-                          }
-                        />
-                      )}
-                    />
-                  }
-                  label={
-                    <>
-                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                        Banned
-                      </Typography>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Apply disable account
-                      </Typography>
-                    </>
-                  }
-                  sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-                />
-              )}
-              <Stack  direction="column" spacing={2} alignItems="flex-end" sx={{ mt: 3 }}>
-                <RHFTextField name="petName" label="Pet Name" />
-
-
-                <ToggleButtonGroup
-                  fullWidth
-                  name="petType"
-                  color="primary"
-                  exclusive
-                  value={petType}
-                  onChange={handlePetTypeChange}
-                  control={control}
-                >
-                  <ToggleButton sx={{ fontWeight: 400 }} value="Dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
-                  <ToggleButton sx={{ fontWeight: 400 }} value="Cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
-                </ToggleButtonGroup>
-
-                <ToggleButtonGroup
-                  fullWidth
-                  name="petGender"
-                  color="primary"
-                  exclusive
-                  value={petGender}
-                  onChange={handlePetGenderChange}
-                  control={control}
-                >
-                  <ToggleButton sx={{ fontWeight: 400 }} value="Male" >MALE</ToggleButton>
-                  <ToggleButton sx={{ fontWeight: 400 }} value="Female" >FEMALE</ToggleButton>
-                </ToggleButtonGroup>
-
-
-                <ToggleButtonGroup
-                  fullWidth
-                  name="petLifeStage"
-                  color="primary"
-                  exclusive
-                  value={petLifeStage}
-                  onChange={handleChangeLifeStage}
-                  control={control}
-                >
-                  <ToggleButton sx={{ fontWeight: 400 }} value="puppy">{puppy_kitten}</ToggleButton>
-                  <ToggleButton sx={{ fontWeight: 400 }} value="adult">ADULT</ToggleButton>
-                  <ToggleButton sx={{ fontWeight: 400 }} value="senior">SENIOR</ToggleButton>
-                </ToggleButtonGroup>
-                <Autocomplete
-                  fullWidth
-                  ref={autocompleteRef}
-                  options={breeds}
-                  value={selectedBreed}
-                  onChange={(event, values) => setSelectedBreed(values)}
-                  renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Enter Pet Breed"
-                        variant="outlined"
-                        InputProps={{
-                          ...params.InputProps,
-                          endAdornment: (
-                            <>
-                              {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                              {params.InputProps.endAdornment}
-                            </>
-                          ),
-                        }}
-                        sx={{ "& .MuiAutocomplete-endAdornment": {
-                            display: "none"
-                          }
-                        }}
-
-                        onChange={handleSearch}
-                        value={searchTerm}
-                        fullWidth
-                        disabled={!petType}
-                        // helperText={petType ? `Enter multiple breeds for mixed pets` : 'Choose cat or dog first'}
-                    />
-                  )}
-                  disabled={!petType}
-                  loading={loadingBreeds}
-                  loadingText="Fetching breeds..."
-                  noOptionsText={petType ? `Enter ${petType} breed` : 'Choose Cat or Dog'}
-                  multiple
-                  />
-
-                <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
-                  {!isEdit ? 'Create Pet Passport' : 'Save Changes'}
-                </LoadingButton>
-              </Stack>
-            </Card>
+            </Box>
+          </Grid>
+          <Grid item>
+            <Box sx={{ width: '300px' }}>
+              <PetCard product={pet} />
+            </Box>
           </Grid>
         </Grid>
-      </FormProvider>
-    </Stack>
+      </Box>
+      ) : (
+        <Box>
+          <Typography sx={{
+            fontSize: "24px",
+            fontWeight: "700",
+            textAlign: "center",
+            marginBottom: "20px"
+          }}>One furball at a time.</Typography>
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={4}>
+                <Card sx={{ pt: 10, pb: 5, px: 3, minWidth: 400 }}>
+                  {isEdit && (
+                    <Label
+                      color={values.status === 'active' ? 'success' : 'error'}
+                      sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
+                    >
+                      {values.status}
+                    </Label>
+                  )}
+
+                  <Box sx={{ mb: 5 }}>
+                    <RHFUploadAvatar
+                      name="avatarUrl"
+                      maxSize={3145728}
+                      onDrop={handleDrop}
+                      helperText={
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            mt: 2,
+                            mx: 'auto',
+                            display: 'block',
+                            textAlign: 'center',
+                            color: 'text.secondary',
+                          }}
+                        >
+                          Allowed *.jpeg, *.jpg, *.png, *.gif
+                          <br /> max size of {fData(3145728)}
+                        </Typography>
+                      }
+                    />
+                  </Box>
+
+                  {isEdit && (
+                    <FormControlLabel
+                      labelPlacement="start"
+                      control={
+                        <Controller
+                          name="status"
+                          control={control}
+                          render={({ field }) => (
+                            <Switch
+                              {...field}
+                              checked={field.value !== 'active'}
+                              onChange={(event) =>
+                                field.onChange(event.target.checked ? 'banned' : 'active')
+                              }
+                            />
+                          )}
+                        />
+                      }
+                      label={
+                        <>
+                          <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                            Banned
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                            Apply disable account
+                          </Typography>
+                        </>
+                      }
+                      sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
+                    />
+                  )}
+                  <Stack  direction="column" spacing={2} alignItems="flex-end" sx={{ mt: 3 }}>
+                    <RHFTextField name="petName" label="Pet Name" />
+
+
+                    <ToggleButtonGroup
+                      fullWidth
+                      name="petType"
+                      color="primary"
+                      exclusive
+                      value={petType}
+                      onChange={handlePetTypeChange}
+                      control={control}
+                    >
+                      <ToggleButton sx={{ fontWeight: 400 }} value="Dog" onClick={(event) => { setPuppyKitten("PUPPY"); }}>DOG</ToggleButton>
+                      <ToggleButton sx={{ fontWeight: 400 }} value="Cat" onClick={(event) => { setPuppyKitten("KITTEN"); }}>CAT</ToggleButton>
+                    </ToggleButtonGroup>
+
+                    <ToggleButtonGroup
+                      fullWidth
+                      name="petGender"
+                      color="primary"
+                      exclusive
+                      value={petGender}
+                      onChange={handlePetGenderChange}
+                      control={control}
+                    >
+                      <ToggleButton sx={{ fontWeight: 400 }} value="Male" >MALE</ToggleButton>
+                      <ToggleButton sx={{ fontWeight: 400 }} value="Female" >FEMALE</ToggleButton>
+                    </ToggleButtonGroup>
+
+
+                    <ToggleButtonGroup
+                      fullWidth
+                      name="petLifeStage"
+                      color="primary"
+                      exclusive
+                      value={petLifeStage}
+                      onChange={handleChangeLifeStage}
+                      control={control}
+                    >
+                      <ToggleButton sx={{ fontWeight: 400 }} value="puppy">{puppy_kitten}</ToggleButton>
+                      <ToggleButton sx={{ fontWeight: 400 }} value="adult">ADULT</ToggleButton>
+                      <ToggleButton sx={{ fontWeight: 400 }} value="senior">SENIOR</ToggleButton>
+                    </ToggleButtonGroup>
+                    <Autocomplete
+                      fullWidth
+                      ref={autocompleteRef}
+                      options={breeds}
+                      value={selectedBreed}
+                      onChange={(event, values) => setSelectedBreed(values)}
+                      renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Enter Pet Breed"
+                            variant="outlined"
+                            InputProps={{
+                              ...params.InputProps,
+                              endAdornment: (
+                                <>
+                                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                  {params.InputProps.endAdornment}
+                                </>
+                              ),
+                            }}
+                            sx={{ "& .MuiAutocomplete-endAdornment": {
+                                display: "none"
+                              }
+                            }}
+
+                            onChange={handleSearch}
+                            value={searchTerm}
+                            fullWidth
+                            disabled={!petType}
+                            // helperText={petType ? `Enter multiple breeds for mixed pets` : 'Choose cat or dog first'}
+                        />
+                      )}
+                      disabled={!petType}
+                      loading={loadingBreeds}
+                      loadingText="Fetching breeds..."
+                      noOptionsText={petType ? `Enter ${petType} breed` : 'Choose Cat or Dog'}
+                      multiple
+                      />
+
+                    <LoadingButton fullWidth  size="large" type="submit" variant="contained" loading={isSubmitting}>
+                      {!isEdit ? 'Create Pet Passport' : 'Save Changes'}
+                    </LoadingButton>
+                  </Stack>
+                </Card>
+              </Grid>
+            </Grid>
+          </FormProvider>
+        </Box>
+        )}
+  </Stack>
   );
 }

@@ -137,7 +137,10 @@ export default function ProductsPage() {
 
       <Modal open={open} 
         onClose={handleClose} 
-        BackdropProps={{style: {ClickBackdrop: false, background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)'}}}
+        BackdropProps={{
+          style: { background: 'url(https://www.petastic.com/static/media/gradient-glow.32c37d10.svg)' },
+          onClick: (event) => event.stopPropagation() // Prevent backdrop click event from propagating
+        }}
         >
         <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', outline: 'none' }}>
           <Container>

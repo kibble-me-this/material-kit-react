@@ -72,11 +72,12 @@ export default function ShopProductCard({ product }) {
             color={(title === 'sale' && 'error') || 'info'}
             sx={{
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '8px',
+              gap: '2px', // Adjust the gap as needed
               position: 'absolute',
-              height: '30px',
+              height: '40px', // Adjust the height as needed
               right: '16px',
               top: '16px',
               background: 'rgba(255, 255, 255, 0.8)',
@@ -92,10 +93,11 @@ export default function ShopProductCard({ product }) {
               color: '#343A40',
               padding: '0 8px', // Adjust the padding as needed
             }}
-          >
-            <Iconify icon="eva:plus-fill" />
-            <span>100 KBL</span>
-          </Label>
+        >
+        <Typography variant="caption" sx={{ fontSize: '8px' }}>REWARDS</Typography>
+        <Typography variant="caption" sx={{ fontSize: '8px', fontWeight: 400 }}>100 KBL</Typography>
+      </Label>
+
 
           )}
         <StyledProductImg alt={title} src={media} />
@@ -136,34 +138,34 @@ export default function ShopProductCard({ product }) {
         </Box>
         <Box sx={{ marginBottom: 3 }}>
         <Button
-  variant="contained"
-  sx={{
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '8px 12px',
-    border: '1px solid #64748B',
-    borderRadius: 1,
-    backgroundColor: 'transparent',
-    fontStyle: 'normal',
-    fontWeight: 600,
-    fontSize: 12,
-    lineHeight: '18px',
-    textAlign: 'center',
-    color: '#64748B',
-    textDecoration: 'none',
-    boxShadow: 'none',
-    '&:hover': {
-      backgroundColor: 'transparent',
-    },
-  }}
->
-  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-    <LockIcon sx={{ marginRight: 1 }} />
-    <Typography variant="body2">View Details</Typography>
-  </Box>
-</Button>
+          variant="contained"
+          sx={{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '8px 12px',
+            border: '1px solid #64748B',
+            borderRadius: 1,
+            backgroundColor: 'transparent',
+            fontStyle: 'normal',
+            fontWeight: 600,
+            fontSize: 12,
+            lineHeight: '18px',
+            textAlign: 'center',
+            color: '#64748B',
+            textDecoration: 'none',
+            boxShadow: 'none',
+            '&:hover': {
+              backgroundColor: 'transparent',
+            },
+          }}
+        >
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <LockIcon sx={{ marginRight: 1 }} />
+            <Typography variant="body2">View Details</Typography>
+          </Box>
+        </Button>
 
 
         </Box>
