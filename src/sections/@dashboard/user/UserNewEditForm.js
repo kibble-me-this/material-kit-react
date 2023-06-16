@@ -12,7 +12,11 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup, ToggleButtonGroup, ToggleButton, Autocomplete, TextField, CircularProgress, Stepper, Step, StepLabel} from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, Button, ButtonGroup, ToggleButtonGroup, ToggleButton, Autocomplete, TextField, CircularProgress, Stepper, Step, StepLabel, LinearProgress} from '@mui/material';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+
+
 // utils
 import BN from 'bn.js';
 import { create } from 'ipfs-http-client';
@@ -389,7 +393,70 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
   };
 
   return (
+    <>
+  <Box sx={{ width: '100%', minWidth: '425px' }}>
   <Stack spacing={3} sx={{ width: '100%', alignItems: 'center' }}>
+  <Box sx={{ width: '100%', mb: '20px' }}>
+  <Stepper activeStep={showCongratulations ? 1 : 0} orientation="horizontal">
+    <Step sx={{ '& .MuiStepLabel-labelContainer': { flexDirection: 'row-reverse' } }}>
+    <StepLabel StepIconProps={{ sx: { marginLeft: '10px' } }}>
+      <Typography variant="caption" sx={{ fontSize: 9, lineHeight: '1.2', display: 'inline-block', textAlign: 'left' }}>
+      Pet Passport</Typography>
+      </StepLabel>
+    </Step>
+    <Step sx={{ '& .MuiStepLabel-labelContainer': { flexDirection: 'row-reverse' } }}>
+      <StepLabel>
+      <Typography variant="caption" sx={{ fontSize: 9, lineHeight: '1.2', display: 'inline-block', textAlign: 'left' }}>
+          Food Profile
+        </Typography>
+      </StepLabel>
+    </Step>
+    <Step sx={{ '& .MuiStepLabel-labelContainer': { flexDirection: 'row-reverse' } }}>
+      <StepLabel>
+      <Typography variant="caption" sx={{ fontSize: 9, lineHeight: '1.2', display: 'inline-block', textAlign: 'left' }}>
+          Vax Records
+        </Typography>
+      </StepLabel>
+    </Step>
+    <Step sx={{ '& .MuiStepLabel-labelContainer': { flexDirection: 'row-reverse' } }}>
+      <StepLabel>
+      <Typography variant="caption" sx={{ fontSize: 9, lineHeight: '1.2', display: 'inline-block', textAlign: 'left' }}>
+          Care Givers
+        </Typography>
+      </StepLabel>
+    </Step>
+  </Stepper>
+  <Box sx={{ width: '100%', marginTop: 2 }}>
+    <LinearProgress variant="determinate" value={25} />
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 1, ml: 2, width: '90%' }}>
+      <Box sx={{ display: 'flex', alignItems: 'left' }}>
+        <LockOpenIcon sx={{ marginRight: .5, fontSize: 12 }} />
+        <Typography variant="caption" sx={{ fontSize: 8, lineHeight: '1.2', mt:'1.4px' }}>
+          + 100 KBL
+        </Typography>
+      </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'left' }}>
+        <LockIcon sx={{ marginRight: 0.5, fontSize: 12, color: '#808080' }} />
+        <Typography variant="caption" sx={{ fontSize: 8, lineHeight: '1.2', mt:'1.4px' }}>
+        + 250 KBL
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'left' }}>
+        <LockIcon sx={{ marginRight: 0.5, fontSize: 12, color: '#808080' }} />
+        <Typography variant="caption" sx={{ fontSize: 8, lineHeight: '1.2', mt:'1.4px' }}>
+        + 750 KBL
+        </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'left' }}>
+        <LockIcon sx={{ marginRight: 0.5, fontSize: 12, color: '#808080' }} />
+        <Typography variant="caption" sx={{ fontSize: 8, lineHeight: '1.2', mt:'1.4px' }}>
+        + 1000 KBL
+        </Typography>
+      </Box>
+    </Box>
+  </Box>
+</Box>
     {showCongratulations ? (
       <Box>
         <Grid container spacing={8} alignItems="center">
@@ -634,5 +701,7 @@ export default function UserNewEditForm({ handleClose, isEdit = false, currentUs
         </Box>
         )}
   </Stack>
+  </Box>
+  </>
   );
 }
